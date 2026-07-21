@@ -94,6 +94,13 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- 腾讯云 COS 对象存储 -->
+        <dependency>
+            <groupId>com.qcloud</groupId>
+            <artifactId>cos_api</artifactId>
+            <version>5.6.219.1</version>
+        </dependency>
+
         <!-- 测试 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

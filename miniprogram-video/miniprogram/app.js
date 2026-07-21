@@ -7,6 +7,14 @@ App({
   },
 
   onLaunch() {
+    // 初始化云托管环境
+    const config = require('./utils/config');
+    if (config.useCloudCallContainer) {
+      wx.cloud.init({
+        env: config.cloudEnv
+      });
+    }
+
     // 检查登录状态
     const token = wx.getStorageSync('token');
     if (token) {

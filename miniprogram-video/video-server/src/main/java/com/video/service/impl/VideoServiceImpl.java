@@ -11,6 +11,7 @@ import com.video.entity.Category;
 import com.video.entity.Video;
 import com.video.mapper.VideoMapper;
 import com.video.service.CategoryService;
+import com.video.service.CosService;
 import com.video.service.VideoEpisodeService;
 import com.video.service.VideoService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
 
     private final CategoryService categoryService;
     private final VideoEpisodeService videoEpisodeService;
+    private final CosService cosService;
     @Autowired(required = false)
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -78,7 +80,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
                 .map(v -> VideoCardVO.builder()
                         .id(v.getId())
                         .title(v.getTitle())
-                        .coverUrl(v.getCoverUrl())
+                        .coverUrl(cosService.transformUrl(v.getCoverUrl()))
                         .categoryName(categoryMap.getOrDefault(v.getCategoryId(), ""))
                         .year(v.getYear())
                         .duration(v.getDuration())
@@ -125,8 +127,8 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
                 .title(video.getTitle())
                 .categoryId(video.getCategoryId())
                 .categoryName(categoryMap.getOrDefault(video.getCategoryId(), ""))
-                .coverUrl(video.getCoverUrl())
-                .videoUrl(video.getVideoUrl())
+                .coverUrl(cosService.transformUrl(video.getCoverUrl()))
+                .videoUrl(cosService.transformUrl(video.getVideoUrl()))
                 .description(video.getDescription())
                 .director(video.getDirector())
                 .actors(video.getActors())

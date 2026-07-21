@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.video.dto.EpisodeVO;
 import com.video.entity.VideoEpisode;
 import com.video.mapper.VideoEpisodeMapper;
+import com.video.service.CosService;
 import com.video.service.VideoEpisodeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class VideoEpisodeServiceImpl extends ServiceImpl<VideoEpisodeMapper, VideoEpisode> implements VideoEpisodeService {
+
+    private final CosService cosService;
 
     @Autowired(required = false)
     private RedisTemplate<String, Object> redisTemplate;
@@ -46,7 +49,7 @@ public class VideoEpisodeServiceImpl extends ServiceImpl<VideoEpisodeMapper, Vid
                         .id(e.getId())
                         .episodeNumber(e.getEpisodeNumber())
                         .episodeTitle(e.getEpisodeTitle())
-                        .videoUrl(e.getVideoUrl())
+                        .videoUrl(cosService.transformUrl(e.getVideoUrl()))
                         .duration(e.getDuration())
                         .build())
                 .collect(Collectors.toList());
