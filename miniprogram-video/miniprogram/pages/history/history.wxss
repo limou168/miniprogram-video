@@ -1,0 +1,150 @@
+/* 播放记录页 */
+.history-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding-bottom: 20rpx;
+}
+
+/* 历史列表 */
+.history-list {
+  padding: 16rpx 24rpx;
+}
+
+.history-item {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  margin-bottom: 16rpx;
+  overflow: hidden;
+}
+
+.history-content {
+  display: flex;
+  padding: 20rpx;
+  position: relative;
+}
+
+.history-cover {
+  width: 180rpx;
+  height: 240rpx;
+  border-radius: 10rpx;
+  background-color: #e0e0e0;
+  flex-shrink: 0;
+}
+
+.history-info {
+  flex: 1;
+  margin-left: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-right: 40rpx;
+}
+
+.history-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.history-meta {
+  display: flex;
+  align-items: center;
+}
+
+.meta-score {
+  font-size: 24rpx;
+  color: #e94560;
+  font-weight: bold;
+  margin-right: 12rpx;
+}
+
+.meta-episode {
+  font-size: 22rpx;
+  color: #666;
+  background-color: #f5f5f5;
+  padding: 2rpx 12rpx;
+  border-radius: 4rpx;
+}
+
+/* 进度条 */
+.progress-section {
+  display: flex;
+  align-items: center;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8rpx;
+  background-color: #eee;
+  border-radius: 4rpx;
+  overflow: hidden;
+  margin-right: 12rpx;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #e94560, #ff6b6b);
+  border-radius: 4rpx;
+}
+
+.progress-text {
+  font-size: 20rpx;
+  color: #999;
+  flex-shrink: 0;
+}
+
+.history-time {
+  font-size: 22rpx;
+  color: #bbb;
+}
+
+.history-remove {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  width: 44rpx;
+  height: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
+  font-size: 28rpx;
+}
+
+.history-remove:active {
+  color: #e94560;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 200rpx;
+}
+
+.empty-icon {
+  font-size: 100rpx;
+  margin-bottom: 20rpx;
+}
+
+.empty-text {
+  font-size: 30rpx;
+  color: #999;
+  margin-bottom: 12rpx;
+}
+
+.empty-hint {
+  font-size: 26rpx;
+  color: #ccc;
+}
+
+/* 加载中 */
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: #999;
+}

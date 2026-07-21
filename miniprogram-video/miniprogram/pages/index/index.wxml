@@ -1,0 +1,45 @@
+<!-- 主页 -->
+<view class="index-container">
+  <!-- 固定顶部搜索栏 -->
+  <search-bar fixed="{{true}}" bindtap="goSearch" bindsearch="goSearchPage" />
+
+  <!-- 搜索栏占位 -->
+  <view style="height: 100rpx;"></view>
+
+  <!-- 轮播图 -->
+  <view class="banner-section">
+    <swiper class="banner-swiper" indicator-dots="{{true}}" autoplay="{{true}}" interval="{{4000}}" circular="{{true}}">
+      <swiper-item wx:for="{{banners}}" wx:key="id">
+        <image class="banner-img" src="{{item.coverUrl}}" mode="aspectFill" bindtap="goDetail" data-id="{{item.id}}" />
+        <view class="banner-title">{{item.title}}</view>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- 分类标签栏 -->
+  <view class="category-section">
+    <category-tabs list="{{categories}}" activeId="{{activeCategoryId}}" bindchange="onCategoryChange" />
+  </view>
+
+  <!-- 影视列表 -->
+  <view class="video-list">
+    <view class="video-grid">
+      <view class="grid-item" wx:for="{{videoList}}" wx:key="id">
+        <video-card video="{{item}}" />
+      </view>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-more" wx:if="{{videoList.length > 0}}">
+      <text wx:if="{{loading}}">加载中...</text>
+      <text wx:elif="{{hasMore}}">上拉加载更多</text>
+      <text wx:else>— 没有更多了 —</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && videoList.length === 0}}">
+      <text class="empty-icon">📭</text>
+      <text class="empty-text">暂无影视数据</text>
+    </view>
+  </view>
+</view>

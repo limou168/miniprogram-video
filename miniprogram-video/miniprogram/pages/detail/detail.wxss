@@ -1,0 +1,296 @@
+/* 影视详情页样式 */
+.detail-container {
+  background-color: #f5f5f5;
+  padding-bottom: 40rpx;
+}
+
+/* 封面 */
+.cover-section {
+  position: relative;
+  width: 100%;
+  height: 500rpx;
+}
+
+.cover-img {
+  width: 100%;
+  height: 100%;
+}
+
+.cover-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 150rpx;
+  background: linear-gradient(transparent, #f5f5f5);
+}
+
+.back-btn {
+  position: absolute;
+  top: 60rpx;
+  left: 24rpx;
+  width: 60rpx;
+  height: 60rpx;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 32rpx;
+}
+
+/* 基本信息 */
+.info-section {
+  padding: 0 24rpx;
+  margin-top: -60rpx;
+  position: relative;
+  z-index: 1;
+}
+
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.video-title {
+  font-size: 38rpx;
+  font-weight: bold;
+  color: #333;
+  flex: 1;
+  margin-right: 20rpx;
+}
+
+.score-box {
+  display: flex;
+  align-items: baseline;
+}
+
+.score-num {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: #e94560;
+}
+
+.score-label {
+  font-size: 24rpx;
+  color: #e94560;
+  margin-left: 4rpx;
+}
+
+.info-tags {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.info-tag {
+  font-size: 22rpx;
+  color: #666;
+  background-color: #ffffff;
+  padding: 6rpx 16rpx;
+  border-radius: 6rpx;
+  margin-right: 12rpx;
+  margin-bottom: 8rpx;
+}
+
+/* 操作按钮 */
+.action-section {
+  padding: 24rpx;
+}
+
+.play-btn {
+  width: 100%;
+  height: 88rpx;
+  background: linear-gradient(135deg, #e94560, #c23152);
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: bold;
+  border-radius: 44rpx;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20rpx;
+  box-shadow: 0 8rpx 24rpx rgba(233, 69, 96, 0.3);
+}
+
+.action-btns {
+  display: flex;
+  justify-content: space-around;
+}
+
+.action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16rpx 40rpx;
+  font-size: 22rpx;
+  color: #666;
+}
+
+.action-btn text:first-child {
+  font-size: 40rpx;
+  margin-bottom: 6rpx;
+}
+
+.action-btn-active {
+  color: #e94560;
+}
+
+/* 分区标题 */
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  padding: 0 24rpx;
+  margin-bottom: 20rpx;
+  margin-top: 10rpx;
+}
+
+/* 简介 */
+.desc-section {
+  padding: 20rpx 24rpx;
+  background-color: #ffffff;
+  margin: 16rpx 24rpx;
+  border-radius: 16rpx;
+}
+
+.desc-text {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.7;
+}
+
+/* 详细信息 */
+.meta-section {
+  padding: 20rpx 24rpx;
+  background-color: #ffffff;
+  margin: 0 24rpx 16rpx;
+  border-radius: 16rpx;
+}
+
+.meta-item {
+  display: flex;
+  padding: 12rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.meta-item:last-child {
+  border-bottom: none;
+}
+
+.meta-label {
+  font-size: 26rpx;
+  color: #999;
+  width: 100rpx;
+  flex-shrink: 0;
+}
+
+.meta-value {
+  font-size: 26rpx;
+  color: #333;
+  flex: 1;
+}
+
+/* 推荐列表 */
+.recommend-section {
+  margin-top: 10rpx;
+}
+
+.recommend-grid {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 24rpx;
+}
+
+.recommend-item {
+  width: calc(50% - 10rpx);
+  margin-right: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.recommend-item:nth-child(2n) {
+  margin-right: 0;
+}
+
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: #999;
+}
+
+/* 选集区域 */
+.episode-section {
+  padding: 20rpx 24rpx;
+  background-color: #ffffff;
+  margin: 0 24rpx 16rpx;
+  border-radius: 16rpx;
+}
+
+.episode-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.episode-toggle {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.episode-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  max-height: 280rpx;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.episode-grid-collapsed {
+  max-height: 140rpx;
+}
+
+.episode-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: calc(20% - 10rpx);
+  padding: 12rpx 4rpx;
+  background-color: #f5f5f5;
+  border-radius: 8rpx;
+  border: 2rpx solid transparent;
+  min-height: 80rpx;
+}
+
+.episode-btn-active {
+  background-color: #e94560;
+  border-color: #c23152;
+}
+
+.episode-btn-active .episode-num {
+  color: #ffffff;
+}
+
+.episode-btn-active .episode-title {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.episode-num {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.episode-title {
+  font-size: 20rpx;
+  color: #999;
+  margin-top: 4rpx;
+  max-width: 100%;
+}

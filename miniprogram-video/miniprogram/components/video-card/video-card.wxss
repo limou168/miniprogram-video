@@ -1,0 +1,77 @@
+/* 影视卡片组件样式 */
+.video-card {
+  width: 100%;
+  border-radius: 12rpx;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.video-card:active {
+  transform: scale(0.97);
+  transition: transform 0.15s;
+}
+
+/* 封面区域 */
+.card-cover {
+  position: relative;
+  width: 100%;
+  padding-top: 133%; /* 3:4 比例 */
+  background-color: #e0e0e0;
+  overflow: hidden;
+}
+
+.cover-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 评分角标 */
+.score-badge {
+  position: absolute;
+  top: 12rpx;
+  right: 12rpx;
+  background: linear-gradient(135deg, #e94560, #ff6b6b);
+  border-radius: 8rpx;
+  padding: 4rpx 12rpx;
+}
+
+.score-text {
+  font-size: 22rpx;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* 信息区域 */
+.card-info {
+  padding: 16rpx 14rpx 18rpx;
+}
+
+.card-title {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 8rpx;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+}
+
+.meta-tag {
+  font-size: 20rpx;
+  color: #e94560;
+  background-color: rgba(233, 69, 96, 0.08);
+  padding: 2rpx 10rpx;
+  border-radius: 4rpx;
+  margin-right: 10rpx;
+}
+
+.meta-text {
+  font-size: 20rpx;
+  color: #999;
+}

@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "video-card": "/components/video-card/video-card"
+  },
+  "navigationBarTitleText": "我的收藏",
+  "enablePullDownRefresh": true
+}

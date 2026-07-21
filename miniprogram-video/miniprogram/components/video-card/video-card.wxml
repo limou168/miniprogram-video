@@ -1,0 +1,25 @@
+<!-- 影视卡片组件 -->
+<view class="video-card" bindtap="onTapCard">
+  <!-- 封面图 -->
+  <view class="card-cover">
+    <image
+      class="cover-img"
+      src="{{video.coverUrl || '/images/default-cover.png'}}"
+      mode="aspectFill"
+      lazy-load="{{true}}"
+    />
+    <!-- 评分角标 -->
+    <view class="score-badge" wx:if="{{video.score > 0}}">
+      <text class="score-text">{{video.score}}</text>
+    </view>
+  </view>
+
+  <!-- 信息区域 -->
+  <view class="card-info">
+    <text class="card-title text-ellipsis">{{video.title}}</text>
+    <view class="card-meta">
+      <text class="meta-tag" wx:if="{{video.categoryName}}">{{video.categoryName}}</text>
+      <text class="meta-text" wx:if="{{video.year}}">{{video.year}}</text>
+    </view>
+  </view>
+</view>

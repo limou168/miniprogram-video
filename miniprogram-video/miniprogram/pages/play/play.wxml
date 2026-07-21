@@ -1,0 +1,32 @@
+<view class="play-container">
+  <!-- 视频播放器 -->
+  <view class="video-wrapper" wx:if="{{!loading}}">
+    <video
+      id="myVideo"
+      class="video-player"
+      src="{{videoUrl}}"
+      title="{{videoTitle}}"
+      controls="{{true}}"
+      autoplay="{{true}}"
+      show-center-play-btn="{{true}}"
+      show-fullscreen-btn="{{true}}"
+      enable-progress-gesture="{{true}}"
+      object-fit="contain"
+      bindtimeupdate="onTimeUpdate"
+      binderror="onVideoError"
+    />
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-wrapper" wx:if="{{loading}}">
+    <text>正在加载...</text>
+  </view>
+
+  <!-- 视频信息 -->
+  <view class="video-info" wx:if="{{videoTitle && !loading}}">
+    <text class="play-title">{{videoTitle}}</text>
+    <view class="play-meta" wx:if="{{playCount}}">
+      <text class="play-count">{{playCount}} 次播放</text>
+    </view>
+  </view>
+</view>

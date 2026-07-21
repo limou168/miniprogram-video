@@ -1,0 +1,37 @@
+<view class="favorites-container">
+  <!-- 收藏列表 -->
+  <view class="fav-list" wx:if="{{list.length > 0}}">
+    <view class="fav-item" wx:for="{{list}}" wx:key="id">
+      <view class="fav-content" bindtap="goDetail" data-id="{{item.videoId}}">
+        <!-- 封面 -->
+        <image class="fav-cover" src="{{item.coverUrl}}" mode="aspectFill" />
+        <!-- 信息 -->
+        <view class="fav-info">
+          <text class="fav-title text-ellipsis">{{item.videoTitle}}</text>
+          <view class="fav-meta">
+            <text class="meta-tag">{{item.categoryName || '影视'}}</text>
+            <text class="meta-text" wx:if="{{item.year}}">{{item.year}}</text>
+            <text class="meta-score" wx:if="{{item.score > 0}}">{{item.score}}分</text>
+          </view>
+          <text class="fav-time">收藏于 {{item.createTime}}</text>
+        </view>
+        <!-- 删除按钮 -->
+        <view class="fav-remove" bindtap="removeFav" data-id="{{item.id}}" data-videoid="{{item.videoId}}">
+          <text>✕</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{list.length === 0 && loaded}}">
+    <text class="empty-icon">❤️</text>
+    <text class="empty-text">还没有收藏影视</text>
+    <text class="empty-hint">去首页发现好片吧</text>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-container" wx:if="{{!loaded}}">
+    <text>加载中...</text>
+  </view>
+</view>

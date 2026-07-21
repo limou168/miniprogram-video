@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "search-bar": "/components/search-bar/search-bar",
+    "video-card": "/components/video-card/video-card",
+    "category-tabs": "/components/category-tabs/category-tabs"
+  },
+  "navigationBarTitleText": "光影影视",
+  "enablePullDownRefresh": false
+}

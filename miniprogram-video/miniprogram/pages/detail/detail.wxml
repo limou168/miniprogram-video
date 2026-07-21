@@ -1,0 +1,106 @@
+<!-- 影视详情页 -->
+<view class="detail-container" wx:if="{{video}}">
+  <!-- 封面大图 -->
+  <view class="cover-section">
+    <image class="cover-img" src="{{video.coverUrl}}" mode="aspectFill" />
+    <view class="cover-overlay"></view>
+    <!-- 返回按钮 -->
+    <view class="back-btn" bindtap="goBack">←</view>
+  </view>
+
+  <!-- 基本信息 -->
+  <view class="info-section">
+    <view class="info-header">
+      <text class="video-title">{{video.title}}</text>
+      <view class="score-box" wx:if="{{video.score > 0}}">
+        <text class="score-num">{{video.score}}</text>
+        <text class="score-label">分</text>
+      </view>
+    </view>
+
+    <view class="info-tags">
+      <text class="info-tag" wx:if="{{video.categoryName}}">{{video.categoryName}}</text>
+      <text class="info-tag" wx:if="{{video.year}}">{{video.year}}</text>
+      <text class="info-tag" wx:if="{{video.area}}">{{video.area}}</text>
+      <text class="info-tag" wx:if="{{video.duration}}">{{video.duration}}</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-section">
+    <button class="play-btn" bindtap="goPlay">
+      ▶ 立即播放
+    </button>
+    <view class="action-btns">
+      <view class="action-btn {{isFavorite ? 'action-btn-active' : ''}}" bindtap="onToggleFavorite">
+        <text>{{isFavorite ? '❤️' : '🤍'}}</text>
+        <text>{{isFavorite ? '已收藏' : '收藏'}}</text>
+      </view>
+      <view class="action-btn" bindtap="onShare">
+        <text>📤</text>
+        <text>分享</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 选集区域（仅电视剧显示） -->
+  <view class="episode-section" wx:if="{{video.categoryId === 2 && episodes.length > 0}}">
+    <view class="episode-header" bindtap="toggleEpisodes">
+      <text class="section-title">选集</text>
+      <text class="episode-toggle">{{showEpisodes ? '收起' : '展开全部'}} ›</text>
+    </view>
+    <view class="episode-grid {{showEpisodes ? '' : 'episode-grid-collapsed'}}">
+      <view
+        class="episode-btn {{item.episodeNumber === currentEpisode ? 'episode-btn-active' : ''}}"
+        wx:for="{{episodes}}" wx:key="id"
+        data-episode="{{item.episodeNumber}}"
+        bindtap="selectEpisode"
+      >
+        <text class="episode-num">{{item.episodeNumber}}</text>
+        <text class="episode-title text-ellipsis" wx:if="{{item.episodeTitle}}">{{item.episodeTitle}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 简介 -->
+  <view class="desc-section" wx:if="{{video.description}}">
+    <text class="section-title">剧情简介</text>
+    <text class="desc-text">{{video.description}}</text>
+  </view>
+
+  <!-- 详细信息 -->
+  <view class="meta-section">
+    <text class="section-title">详细信息</text>
+    <view class="meta-item" wx:if="{{video.director}}">
+      <text class="meta-label">导演</text>
+      <text class="meta-value">{{video.director}}</text>
+    </view>
+    <view class="meta-item" wx:if="{{video.actors}}">
+      <text class="meta-label">主演</text>
+      <text class="meta-value">{{video.actors}}</text>
+    </view>
+    <view class="meta-item" wx:if="{{video.tags}}">
+      <text class="meta-label">标签</text>
+      <text class="meta-value">{{video.tags}}</text>
+    </view>
+    <view class="meta-item" wx:if="{{video.playCount}}">
+      <text class="meta-label">播放量</text>
+      <text class="meta-value">{{video.playCount}} 次</text>
+    </view>
+  </view>
+
+  <!-- 相关推荐 -->
+  <view class="recommend-section" wx:if="{{recommendList.length > 0}}">
+    <text class="section-title">相关推荐</text>
+    <view class="recommend-grid">
+      <view class="recommend-item" wx:for="{{recommendList}}" wx:key="id">
+        <video-card video="{{item}}" />
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 加载中 -->
+<view class="loading-container" wx:if="{{!video}}">
+  <text>加载中...</text>
+</view>

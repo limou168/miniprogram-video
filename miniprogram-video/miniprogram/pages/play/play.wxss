@@ -1,0 +1,48 @@
+/* 播放页样式 */
+.play-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #000000;
+}
+
+.video-wrapper {
+  width: 100%;
+  background-color: #000000;
+}
+
+.video-player {
+  width: 100%;
+}
+
+/* 加载中 */
+.loading-wrapper {
+  height: 500rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 视频信息 */
+.video-info {
+  padding: 24rpx;
+}
+
+.play-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #ffffff;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.play-meta {
+  display: flex;
+}
+
+.play-count {
+  font-size: 24rpx;
+  color: #999;
+}

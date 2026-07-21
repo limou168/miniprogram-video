@@ -1,0 +1,18 @@
+<!-- 搜索栏组件 -->
+<view class="search-bar {{fixed ? 'search-bar-fixed' : ''}}">
+  <view class="search-box" bindtap="onTapSearch">
+    <text class="search-icon">🔍</text>
+    <input
+      class="search-input"
+      placeholder="{{placeholder}}"
+      placeholder-class="search-placeholder"
+      value="{{keyword}}"
+      bindinput="onInput"
+      bindconfirm="onConfirm"
+      bindfocus="onFocus"
+      confirm-type="search"
+      focus="{{autoFocus}}"
+    />
+    <text class="search-btn" wx:if="{{keyword}}" bindtap="onClear">✕</text>
+  </view>
+</view>
