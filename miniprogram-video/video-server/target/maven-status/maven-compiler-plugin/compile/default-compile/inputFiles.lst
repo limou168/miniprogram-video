@@ -2,6 +2,7 @@ E:\project\miniprogram-video\video-server\src\main\java\com\video\common\Busines
 E:\project\miniprogram-video\video-server\src\main\java\com\video\common\GlobalExceptionHandler.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\common\JwtUtil.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\common\Result.java
+E:\project\miniprogram-video\video-server\src\main\java\com\video\config\CosConfig.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\config\FilterConfig.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\config\MyBatisPlusConfig.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\config\PasswordConfig.java
@@ -9,6 +10,7 @@ E:\project\miniprogram-video\video-server\src\main\java\com\video\config\RedisCo
 E:\project\miniprogram-video\video-server\src\main\java\com\video\config\WebConfig.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\controller\CategoryController.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\controller\FavoriteController.java
+E:\project\miniprogram-video\video-server\src\main\java\com\video\controller\FileController.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\controller\PlayHistoryController.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\controller\UserController.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\controller\VideoController.java
@@ -40,6 +42,7 @@ E:\project\miniprogram-video\video-server\src\main\java\com\video\mapper\VideoMa
 E:\project\miniprogram-video\video-server\src\main\java\com\video\security\JwtAuthenticationFilter.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\security\UserContext.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\service\CategoryService.java
+E:\project\miniprogram-video\video-server\src\main\java\com\video\service\CosService.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\service\FavoriteService.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\service\impl\CategoryServiceImpl.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\service\impl\FavoriteServiceImpl.java

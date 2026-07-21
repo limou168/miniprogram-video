@@ -25,8 +25,10 @@ com\video\controller\UserController.class
 com\video\dto\VideoVO$VideoVOBuilder.class
 com\video\dto\EpisodeVO.class
 com\video\mapper\VideoEpisodeMapper.class
+com\video\controller\FileController.class
 com\video\security\UserContext.class
 com\video\common\JwtUtil.class
+com\video\service\CosService.class
 com\video\config\FilterConfig.class
 com\video\service\FavoriteService.class
 com\video\config\RedisConfig.class
@@ -34,6 +36,7 @@ com\video\dto\LoginDTO.class
 com\video\entity\User.class
 com\video\config\WebConfig.class
 com\video\security\JwtAuthenticationFilter.class
+com\video\config\CosConfig.class
 com\video\dto\EpisodeVO$EpisodeVOBuilder.class
 com\video\controller\FavoriteController.class
 com\video\dto\PasswordDTO.class

@@ -30,6 +30,14 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
 
+# 腾讯云 COS 配置（从环境变量读取）
+cos:
+  bucket: ${COS_BUCKET:}
+  region: ${COS_REGION:}
+  secret-id: ${COS_SECRET_ID:}
+  secret-key: ${COS_SECRET_KEY:}
+  cdn-domain: ${COS_CDN_DOMAIN:}
+
 # Actuator 健康检查
 management:
   endpoints:
