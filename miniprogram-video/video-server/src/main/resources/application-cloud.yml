@@ -9,6 +9,9 @@ spring:
       minimum-idle: 5
       idle-timeout: 300000
       connection-timeout: 20000
+      max-lifetime: 600000   # 10分钟，小于MySQL的wait_timeout，防止连接被服务端关闭
+      connection-test-query: SELECT 1  # 分配连接前验证有效性
+      validation-timeout: 5000
   data:
     redis:
       host: ${REDIS_HOST}
@@ -43,4 +46,4 @@ management:
         include: health,info
   endpoint:
     health:
-      show-details: when_authorized
+      show-details: always

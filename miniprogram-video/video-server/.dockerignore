@@ -6,4 +6,4 @@ target/
 node_modules/
 **/node_modules/
 *.md
-logs/
+logs
