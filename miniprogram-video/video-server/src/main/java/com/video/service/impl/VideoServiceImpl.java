@@ -14,6 +14,7 @@ import com.video.service.CategoryService;
 import com.video.service.VideoEpisodeService;
 import com.video.service.VideoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -29,7 +30,8 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
 
     private final CategoryService categoryService;
     private final VideoEpisodeService videoEpisodeService;
-    private final RedisTemplate<String, Object> redisTemplate;
+    @Autowired(required = false)
+    private RedisTemplate<String, Object> redisTemplate;
 
     private static final String DETAIL_CACHE_PREFIX = "video:detail:";
     private static final String HOT_CACHE_KEY = "video:hot";
@@ -93,15 +95,17 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
     public VideoVO getVideoDetail(Long id) {
         // 先查 Redis 缓存
         String cacheKey = DETAIL_CACHE_PREFIX + id;
-        Object cached = redisTemplate.opsForValue().get(cacheKey);
-        if (cached instanceof VideoVO) {
-            // 异步更新播放量（简单实现：直接 DB +1）
-            Video video = getById(id);
-            if (video != null) {
-                video.setPlayCount((video.getPlayCount() == null ? 0 : video.getPlayCount()) + 1);
-                updateById(video);
+        if (redisTemplate != null) {
+            Object cached = redisTemplate.opsForValue().get(cacheKey);
+            if (cached instanceof VideoVO) {
+                // 异步更新播放量（简单实现：直接 DB +1）
+                Video video = getById(id);
+                if (video != null) {
+                    video.setPlayCount((video.getPlayCount() == null ? 0 : video.getPlayCount()) + 1);
+                    updateById(video);
+                }
+                return (VideoVO) cached;
             }
-            return (VideoVO) cached;
         }
 
         Video video = getById(id);
@@ -140,8 +144,10 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
             vo.setEpisodes(videoEpisodeService.getEpisodesByVideoId(id));
         }
 
-        // 写入 Redis 缓存
-        redisTemplate.opsForValue().set(cacheKey, vo, DETAIL_CACHE_TTL, TimeUnit.HOURS);
+        // 写入 Redis 缓存（仅当 Redis 可用时）
+        if (redisTemplate != null) {
+            redisTemplate.opsForValue().set(cacheKey, vo, DETAIL_CACHE_TTL, TimeUnit.HOURS);
+        }
 
         return vo;
     }
@@ -150,10 +156,12 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
     @SuppressWarnings("unchecked")
     public PageResult<VideoCardVO> getHotVideos() {
         // 先查 Redis
-        Object cached = redisTemplate.opsForValue().get(HOT_CACHE_KEY);
-        if (cached instanceof List) {
-            List<VideoCardVO> list = (List<VideoCardVO>) cached;
-            return PageResult.of(list.size(), 1, list.size(), list);
+        if (redisTemplate != null) {
+            Object cached = redisTemplate.opsForValue().get(HOT_CACHE_KEY);
+            if (cached instanceof List) {
+                List<VideoCardVO> list = (List<VideoCardVO>) cached;
+                return PageResult.of(list.size(), 1, list.size(), list);
+            }
         }
 
         // 按播放量排序取前 20

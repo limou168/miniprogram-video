@@ -11,6 +11,7 @@ import com.video.mapper.VideoMapper;
 import com.video.service.CategoryService;
 import com.video.service.FavoriteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> implements FavoriteService {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    @Autowired(required = false)
+    private RedisTemplate<String, Object> redisTemplate;
     private final CategoryService categoryService;
     private final VideoMapper videoMapper;
 
@@ -57,18 +59,22 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
 
     @Override
     public boolean isFavorite(Long userId, Long videoId) {
-        String cacheKey = FAVORITE_CHECK_CACHE_PREFIX + userId + ":" + videoId;
-        Object cached = redisTemplate.opsForValue().get(cacheKey);
-        if (cached instanceof Boolean) {
-            return (Boolean) cached;
+        if (redisTemplate != null) {
+            String cacheKey = FAVORITE_CHECK_CACHE_PREFIX + userId + ":" + videoId;
+            Object cached = redisTemplate.opsForValue().get(cacheKey);
+            if (cached instanceof Boolean) {
+                return (Boolean) cached;
+            }
         }
 
         boolean result = count(new LambdaQueryWrapper<Favorite>()
                 .eq(Favorite::getUserId, userId)
                 .eq(Favorite::getVideoId, videoId)) > 0;
 
-        // 写入缓存
-        redisTemplate.opsForValue().set(cacheKey, result, FAVORITE_CACHE_TTL, TimeUnit.MINUTES);
+        // 写入缓存（Redis 可用时）
+        if (redisTemplate != null) {
+            redisTemplate.opsForValue().set(FAVORITE_CHECK_CACHE_PREFIX + userId + ":" + videoId, result, FAVORITE_CACHE_TTL, TimeUnit.MINUTES);
+        }
 
         return result;
     }
@@ -83,11 +89,13 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
     @Override
     @SuppressWarnings("unchecked")
     public List<FavoriteVO> getUserFavoriteVOs(Long userId) {
-        // 先查 Redis 缓存
-        String cacheKey = FAVORITE_LIST_CACHE_PREFIX + userId;
-        Object cached = redisTemplate.opsForValue().get(cacheKey);
-        if (cached instanceof List) {
-            return (List<FavoriteVO>) cached;
+        // 先查 Redis 缓存（仅当 Redis 可用时）
+        if (redisTemplate != null) {
+            String cacheKey = FAVORITE_LIST_CACHE_PREFIX + userId;
+            Object cached = redisTemplate.opsForValue().get(cacheKey);
+            if (cached instanceof List) {
+                return (List<FavoriteVO>) cached;
+            }
         }
 
         // 查数据库
@@ -125,18 +133,22 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
                 .filter(java.util.Objects::nonNull)
                 .collect(Collectors.toList());
 
-        // 写入 Redis 缓存
-        redisTemplate.opsForValue().set(cacheKey, list, FAVORITE_CACHE_TTL, TimeUnit.MINUTES);
+        // 写入 Redis 缓存（仅当 Redis 可用时）
+        if (redisTemplate != null) {
+            redisTemplate.opsForValue().set(FAVORITE_LIST_CACHE_PREFIX + userId, list, FAVORITE_CACHE_TTL, TimeUnit.MINUTES);
+        }
 
         return list;
     }
 
     /**
-     * 清除收藏相关的所有缓存
+     * 清除收藏相关的所有缓存（Redis 不可用时跳过）
      */
     private void clearFavoriteCache(Long userId, Long videoId) {
-        redisTemplate.delete(FAVORITE_LIST_CACHE_PREFIX + userId);
-        redisTemplate.delete(FAVORITE_CHECK_CACHE_PREFIX + userId + ":" + videoId);
+        if (redisTemplate != null) {
+            redisTemplate.delete(FAVORITE_LIST_CACHE_PREFIX + userId);
+            redisTemplate.delete(FAVORITE_CHECK_CACHE_PREFIX + userId + ":" + videoId);
+        }
     }
 
     /**

@@ -7,6 +7,7 @@ import com.video.entity.Category;
 import com.video.mapper.CategoryMapper;
 import com.video.service.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements CategoryService {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    @Autowired(required = false)
+    private RedisTemplate<String, Object> redisTemplate;
     private static final String CACHE_KEY = "category:list";
     private static final long CACHE_TTL = 30; // 30分钟
 
@@ -26,9 +28,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @SuppressWarnings("unchecked")
     public List<CategoryVO> listAll() {
         // 先从 Redis 获取
-        Object cached = redisTemplate.opsForValue().get(CACHE_KEY);
-        if (cached instanceof List) {
-            return (List<CategoryVO>) cached;
+        if (redisTemplate != null) {
+            Object cached = redisTemplate.opsForValue().get(CACHE_KEY);
+            if (cached instanceof List) {
+                return (List<CategoryVO>) cached;
+            }
         }
 
         // 查数据库
@@ -43,8 +47,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
                         .build())
                 .collect(Collectors.toList());
 
-        // 写入 Redis
-        redisTemplate.opsForValue().set(CACHE_KEY, list, CACHE_TTL, TimeUnit.MINUTES);
+        // 写入 Redis 缓存（仅当 Redis 可用时）
+        if (redisTemplate != null) {
+            redisTemplate.opsForValue().set(CACHE_KEY, list, CACHE_TTL, TimeUnit.MINUTES);
+        }
 
         return list;
     }

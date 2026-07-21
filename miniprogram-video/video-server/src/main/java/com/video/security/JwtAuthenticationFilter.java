@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -22,7 +23,8 @@ import java.util.List;
 public class JwtAuthenticationFilter implements Filter {
 
     private final JwtUtil jwtUtil;
-    private final RedisTemplate<String, Object> redisTemplate;
+    @Autowired(required = false)
+    private RedisTemplate<String, Object> redisTemplate;
 
     // 不需要认证的路径
     private static final List<String> EXCLUDE_PATHS = List.of(
@@ -71,11 +73,13 @@ public class JwtAuthenticationFilter implements Filter {
         // 从 token 解析用户 ID
         Long userId = jwtUtil.getUserIdFromToken(token);
 
-        // 检查 Redis 中 token 是否还存在（未被修改密码等操作清除）
-        String redisToken = (String) redisTemplate.opsForValue().get(TOKEN_PREFIX + userId);
-        if (redisToken == null || !redisToken.equals(token)) {
-            sendUnauthorized(response, "登录已过期，请重新登录");
-            return;
+        // 检查 Redis 中 token 是否还存在（Redis 不可用时仅验证 JWT 本身）
+        if (redisTemplate != null) {
+            String redisToken = (String) redisTemplate.opsForValue().get(TOKEN_PREFIX + userId);
+            if (redisToken == null || !redisToken.equals(token)) {
+                sendUnauthorized(response, "登录已过期，请重新登录");
+                return;
+            }
         }
 
         // 设置用户上下文

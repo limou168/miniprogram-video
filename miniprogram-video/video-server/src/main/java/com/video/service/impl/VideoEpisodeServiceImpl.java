@@ -7,6 +7,7 @@ import com.video.entity.VideoEpisode;
 import com.video.mapper.VideoEpisodeMapper;
 import com.video.service.VideoEpisodeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class VideoEpisodeServiceImpl extends ServiceImpl<VideoEpisodeMapper, VideoEpisode> implements VideoEpisodeService {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    @Autowired(required = false)
+    private RedisTemplate<String, Object> redisTemplate;
 
     private static final String EPISODES_CACHE_PREFIX = "video:episodes:";
     private static final long EPISODES_CACHE_TTL = 1; // 1小时
@@ -26,11 +28,13 @@ public class VideoEpisodeServiceImpl extends ServiceImpl<VideoEpisodeMapper, Vid
     @Override
     @SuppressWarnings("unchecked")
     public List<EpisodeVO> getEpisodesByVideoId(Long videoId) {
-        // 先查 Redis 缓存
-        String cacheKey = EPISODES_CACHE_PREFIX + videoId;
-        Object cached = redisTemplate.opsForValue().get(cacheKey);
-        if (cached instanceof List) {
-            return (List<EpisodeVO>) cached;
+        // 先查 Redis 缓存（仅当 Redis 可用时）
+        if (redisTemplate != null) {
+            String cacheKey = EPISODES_CACHE_PREFIX + videoId;
+            Object cached = redisTemplate.opsForValue().get(cacheKey);
+            if (cached instanceof List) {
+                return (List<EpisodeVO>) cached;
+            }
         }
 
         // 查数据库
@@ -47,8 +51,10 @@ public class VideoEpisodeServiceImpl extends ServiceImpl<VideoEpisodeMapper, Vid
                         .build())
                 .collect(Collectors.toList());
 
-        // 写入 Redis 缓存
-        redisTemplate.opsForValue().set(cacheKey, list, EPISODES_CACHE_TTL, TimeUnit.HOURS);
+        // 写入 Redis 缓存（仅当 Redis 可用时）
+        if (redisTemplate != null) {
+            redisTemplate.opsForValue().set(EPISODES_CACHE_PREFIX + videoId, list, EPISODES_CACHE_TTL, TimeUnit.HOURS);
+        }
 
         return list;
     }

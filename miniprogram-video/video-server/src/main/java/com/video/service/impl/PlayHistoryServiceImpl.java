@@ -10,6 +10,7 @@ import com.video.mapper.PlayHistoryMapper;
 import com.video.mapper.VideoMapper;
 import com.video.service.PlayHistoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PlayHistoryServiceImpl extends ServiceImpl<PlayHistoryMapper, PlayHistory> implements PlayHistoryService {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    @Autowired(required = false)
+    private RedisTemplate<String, Object> redisTemplate;
     private final VideoMapper videoMapper;
 
     private static final String HISTORY_LIST_CACHE_PREFIX = "history:list:";
@@ -58,8 +60,10 @@ public class PlayHistoryServiceImpl extends ServiceImpl<PlayHistoryMapper, PlayH
             save(history);
         }
 
-        // 清除缓存
-        redisTemplate.delete(HISTORY_LIST_CACHE_PREFIX + userId);
+        // 清除缓存（Redis 不可用时跳过）
+        if (redisTemplate != null) {
+            redisTemplate.delete(HISTORY_LIST_CACHE_PREFIX + userId);
+        }
     }
 
     @Override
@@ -72,11 +76,13 @@ public class PlayHistoryServiceImpl extends ServiceImpl<PlayHistoryMapper, PlayH
     @Override
     @SuppressWarnings("unchecked")
     public List<HistoryVO> getUserHistoryVOs(Long userId) {
-        // 先查 Redis 缓存
-        String cacheKey = HISTORY_LIST_CACHE_PREFIX + userId;
-        Object cached = redisTemplate.opsForValue().get(cacheKey);
-        if (cached instanceof List) {
-            return (List<HistoryVO>) cached;
+        // 先查 Redis 缓存（仅当 Redis 可用时）
+        if (redisTemplate != null) {
+            String cacheKey = HISTORY_LIST_CACHE_PREFIX + userId;
+            Object cached = redisTemplate.opsForValue().get(cacheKey);
+            if (cached instanceof List) {
+                return (List<HistoryVO>) cached;
+            }
         }
 
         // 查数据库
@@ -116,8 +122,10 @@ public class PlayHistoryServiceImpl extends ServiceImpl<PlayHistoryMapper, PlayH
                 .filter(java.util.Objects::nonNull)
                 .collect(Collectors.toList());
 
-        // 写入 Redis 缓存
-        redisTemplate.opsForValue().set(cacheKey, list, HISTORY_CACHE_TTL, TimeUnit.MINUTES);
+        // 写入 Redis 缓存（仅当 Redis 可用时）
+        if (redisTemplate != null) {
+            redisTemplate.opsForValue().set(HISTORY_LIST_CACHE_PREFIX + userId, list, HISTORY_CACHE_TTL, TimeUnit.MINUTES);
+        }
 
         return list;
     }
@@ -131,8 +139,10 @@ public class PlayHistoryServiceImpl extends ServiceImpl<PlayHistoryMapper, PlayH
         }
         removeById(historyId);
 
-        // 清除缓存
-        redisTemplate.delete(HISTORY_LIST_CACHE_PREFIX + userId);
+        // 清除缓存（Redis 不可用时跳过）
+        if (redisTemplate != null) {
+            redisTemplate.delete(HISTORY_LIST_CACHE_PREFIX + userId);
+        }
     }
 
     /**

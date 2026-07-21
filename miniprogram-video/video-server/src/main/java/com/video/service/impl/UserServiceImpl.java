@@ -9,6 +9,7 @@ import com.video.entity.User;
 import com.video.mapper.UserMapper;
 import com.video.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,8 @@ import java.util.concurrent.TimeUnit;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     private final JwtUtil jwtUtil;
-    private final RedisTemplate<String, Object> redisTemplate;
+    @Autowired(required = false)
+    private RedisTemplate<String, Object> redisTemplate;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private static final String TOKEN_PREFIX = "token:";
@@ -66,8 +68,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 生成 token
         String token = jwtUtil.generateToken(user.getId());
 
-        // 存入 Redis（用于退出登录、修改密码后失效）
-        redisTemplate.opsForValue().set(TOKEN_PREFIX + user.getId(), token, 7, TimeUnit.DAYS);
+        // 存入 Redis（用于退出登录、修改密码后失效），Redis 不可用时跳过
+        if (redisTemplate != null) {
+            redisTemplate.opsForValue().set(TOKEN_PREFIX + user.getId(), token, 7, TimeUnit.DAYS);
+        }
 
         return LoginVO.builder()
                 .token(token)
@@ -93,8 +97,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         updateById(user);
 
-        // 清除 Redis 中的 token，使旧 token 失效
-        redisTemplate.delete(TOKEN_PREFIX + userId);
+        // 清除 Redis 中的 token，使旧 token 失效（Redis 不可用时跳过）
+        if (redisTemplate != null) {
+            redisTemplate.delete(TOKEN_PREFIX + userId);
+        }
     }
 
     @Override
