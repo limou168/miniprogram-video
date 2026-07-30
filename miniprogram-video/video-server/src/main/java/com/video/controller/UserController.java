@@ -62,4 +62,18 @@ public class UserController {
         userService.changePassword(userId, dto);
         return Result.ok();
     }
+
+    /**
+     * Token 自动续期
+     * 前端在检测到 401 时调用此接口尝试刷新
+     */
+    @PostMapping("/refresh")
+    public Result<LoginVO> refresh() {
+        Long userId = UserContext.getUserId();
+        if (userId == null) {
+            return Result.fail(401, "未登录");
+        }
+        LoginVO vo = userService.refreshToken(userId);
+        return Result.ok(vo);
+    }
 }

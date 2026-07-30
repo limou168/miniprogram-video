@@ -4,13 +4,16 @@ import com.video.common.Result;
 import com.video.dto.EpisodeVO;
 import com.video.dto.PageResult;
 import com.video.dto.VideoCardVO;
+import com.video.dto.VideoSourceVO;
 import com.video.dto.VideoVO;
 import com.video.service.VideoEpisodeService;
 import com.video.service.VideoService;
+import com.video.service.VideoSourceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/video")
@@ -19,6 +22,7 @@ public class VideoController {
 
     private final VideoService videoService;
     private final VideoEpisodeService videoEpisodeService;
+    private final VideoSourceService videoSourceService;
 
     /**
      * 分页获取影视列表
@@ -79,5 +83,23 @@ public class VideoController {
     @GetMapping("/{id}/episodes")
     public Result<List<EpisodeVO>> episodes(@PathVariable Long id) {
         return Result.ok(videoEpisodeService.getEpisodesByVideoId(id));
+    }
+
+    /**
+     * 获取视频播放源列表（支持多线路）
+     */
+    @GetMapping("/{id}/sources")
+    public Result<List<VideoSourceVO>> sources(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") Integer episodeNumber) {
+        return Result.ok(videoSourceService.getSources(id, episodeNumber));
+    }
+
+    /**
+     * 获取指定分类下的标签列表（用作二级分类）
+     */
+    @GetMapping("/tags")
+    public Result<List<String>> tags(@RequestParam Long categoryId) {
+        return Result.ok(videoService.getTagsByCategory(categoryId));
     }
 }

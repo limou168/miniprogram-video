@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * 分集返回 VO
  */
@@ -19,4 +21,5 @@ public class EpisodeVO {
     private String episodeTitle;
     private String videoUrl;
     private String duration;
+    private List<VideoSourceVO> sources;
 }

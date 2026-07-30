@@ -10,7 +10,11 @@ Page({
     recommendList: [],
     episodes: [],
     currentEpisode: 1,
-    showEpisodes: false
+    showEpisodes: false,
+    // 多播放源
+    currentSourceIndex: 0,
+    sources: [],
+    showSources: false
   },
 
   onLoad(options) {
@@ -29,6 +33,13 @@ Page({
       this.setData({ video });
       wx.setNavigationBarTitle({ title: video.title || '影视详情' });
 
+      // 加载播放源
+      if (video.sources && video.sources.length > 0) {
+        this.setData({ sources: video.sources, currentSourceIndex: 0 });
+      } else {
+        this.loadSources(0);
+      }
+
       // 如果是电视剧，加载分集列表
       if (video.categoryId === 2) {
         this.loadEpisodes();
@@ -43,14 +54,29 @@ Page({
     try {
       const episodes = await videoApi.episodes(this.data.videoId);
       this.setData({ episodes, currentEpisode: 1 });
+      // 默认选中第一集的播放源
+      this.loadSources(1);
     } catch (err) {
       console.error('加载分集失败:', err);
     }
   },
 
+  // 加载指定集数的播放源
+  async loadSources(episodeNumber) {
+    try {
+      const sources = await videoApi.sources(this.data.videoId, episodeNumber || 0);
+      this.setData({
+        sources: sources || [],
+        currentSourceIndex: 0
+      });
+    } catch (err) {
+      console.error('加载播放源失败:', err);
+    }
+  },
+
   async loadRecommend() {
     try {
-      const result = await videoApi.list({ page: 1, size: 6 });
+      const result = await videoApi.list({ page: 1, size: 6, orderBy: 'play_count' });
       this.setData({ recommendList: (result.records || []).slice(0, 6) });
     } catch (err) {
       console.error('加载推荐失败:', err);
@@ -71,6 +97,8 @@ Page({
   selectEpisode(e) {
     const episode = Number(e.currentTarget.dataset.episode);
     this.setData({ currentEpisode: episode });
+    // 切换集数时加载该集的播放源
+    this.loadSources(episode);
   },
 
   // 展开/收起选集
@@ -78,14 +106,30 @@ Page({
     this.setData({ showEpisodes: !this.data.showEpisodes });
   },
 
+  // 切换播放源
+  selectSource(e) {
+    const index = Number(e.currentTarget.dataset.index);
+    this.setData({ currentSourceIndex: index });
+  },
+
+  // 展开/收起播放源
+  toggleSources() {
+    this.setData({ showSources: !this.data.showSources });
+  },
+
   // 播放
   goPlay() {
-    const { videoId, currentEpisode, video } = this.data;
-    // 电视剧带分集参数，电影不带
+    const { videoId, currentEpisode, video, currentSourceIndex, sources } = this.data;
+    // 传递当前选中的播放源索引
+    const sourceIndex = currentSourceIndex || 0;
     if (video && video.categoryId === 2) {
-      wx.navigateTo({ url: '/pages/play/play?id=' + videoId + '&episode=' + currentEpisode });
+      wx.navigateTo({
+        url: '/pages/play/play?id=' + videoId + '&episode=' + currentEpisode + '&sourceIndex=' + sourceIndex
+      });
     } else {
-      wx.navigateTo({ url: '/pages/play/play?id=' + videoId });
+      wx.navigateTo({
+        url: '/pages/play/play?id=' + videoId + '&sourceIndex=' + sourceIndex
+      });
     }
   },
 

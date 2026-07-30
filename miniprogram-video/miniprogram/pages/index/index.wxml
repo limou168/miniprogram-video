@@ -1,4 +1,4 @@
-<!-- 主页 -->
+<!-- 主页（热门/最新/高分） -->
 <view class="index-container">
   <!-- 固定顶部搜索栏 -->
   <search-bar fixed="{{true}}" bindtap="goSearch" bindsearch="goSearchPage" />
@@ -6,8 +6,8 @@
   <!-- 搜索栏占位 -->
   <view style="height: 100rpx;"></view>
 
-  <!-- 轮播图 -->
-  <view class="banner-section">
+  <!-- 轮播图（热门推荐） -->
+  <view class="banner-section" wx:if="{{banners.length > 0}}">
     <swiper class="banner-swiper" indicator-dots="{{true}}" autoplay="{{true}}" interval="{{4000}}" circular="{{true}}">
       <swiper-item wx:for="{{banners}}" wx:key="id">
         <image class="banner-img" src="{{item.coverUrl}}" mode="aspectFill" bindtap="goDetail" data-id="{{item.id}}" />
@@ -19,6 +19,18 @@
   <!-- 分类标签栏 -->
   <view class="category-section">
     <category-tabs list="{{categories}}" activeId="{{activeCategoryId}}" bindchange="onCategoryChange" />
+  </view>
+
+  <!-- 导航标签（热门/最新/高分） -->
+  <view class="nav-tabs">
+    <view
+      class="nav-item {{activeNav === item.key ? 'nav-item-active' : ''}}"
+      wx:for="{{navTabs}}" wx:key="key"
+      data-key="{{item.key}}"
+      bindtap="onNavChange"
+    >
+      <text>{{item.name}}</text>
+    </view>
   </view>
 
   <!-- 影视列表 -->

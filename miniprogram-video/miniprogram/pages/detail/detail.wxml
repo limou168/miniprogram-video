@@ -4,7 +4,6 @@
   <view class="cover-section">
     <image class="cover-img" src="{{video.coverUrl}}" mode="aspectFill" />
     <view class="cover-overlay"></view>
-    <!-- 返回按钮 -->
     <view class="back-btn" bindtap="goBack">←</view>
   </view>
 
@@ -43,23 +42,44 @@
     </view>
   </view>
 
-  <!-- 选集区域（仅电视剧显示） -->
-  <view class="episode-section" wx:if="{{video.categoryId === 2 && episodes.length > 0}}">
-    <view class="episode-header" bindtap="toggleEpisodes">
-      <text class="section-title">选集</text>
-      <text class="episode-toggle">{{showEpisodes ? '收起' : '展开全部'}} ›</text>
+  <!-- 播放源区域 -->
+  <view class="source-section" wx:if="{{sources.length > 1}}">
+    <view class="section-header" bindtap="toggleSources">
+      <text class="section-title">播放源</text>
+      <text class="section-toggle">{{showSources ? '收起' : '展开'}} ›</text>
     </view>
-    <view class="episode-grid {{showEpisodes ? '' : 'episode-grid-collapsed'}}">
-      <view
-        class="episode-btn {{item.episodeNumber === currentEpisode ? 'episode-btn-active' : ''}}"
-        wx:for="{{episodes}}" wx:key="id"
-        data-episode="{{item.episodeNumber}}"
-        bindtap="selectEpisode"
-      >
-        <text class="episode-num">{{item.episodeNumber}}</text>
-        <text class="episode-title text-ellipsis" wx:if="{{item.episodeTitle}}">{{item.episodeTitle}}</text>
+    <scroll-view class="source-scroll" scroll-x enhanced show-scrollbar="{{false}}" wx:if="{{showSources}}">
+      <view class="source-list">
+        <view
+          class="source-btn {{index === currentSourceIndex ? 'source-btn-active' : ''}}"
+          wx:for="{{sources}}" wx:key="id"
+          data-index="{{index}}"
+          bindtap="selectSource"
+        >
+          <text>{{item.sourceName}}</text>
+        </view>
       </view>
+    </scroll-view>
+  </view>
+
+  <!-- 选集区域（横向滑动） -->
+  <view class="episode-section" wx:if="{{episodes.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">选集</text>
+      <text class="episode-count">共 {{episodes.length}} 集</text>
     </view>
+    <scroll-view class="episode-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="episode-list">
+        <view
+          class="episode-btn {{item.episodeNumber === currentEpisode ? 'episode-btn-active' : ''}}"
+          wx:for="{{episodes}}" wx:key="id"
+          data-episode="{{item.episodeNumber}}"
+          bindtap="selectEpisode"
+        >
+          <text class="episode-num">{{item.episodeNumber}}</text>
+        </view>
+      </view>
+    </scroll-view>
   </view>
 
   <!-- 简介 -->

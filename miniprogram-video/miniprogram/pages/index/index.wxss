@@ -40,6 +40,28 @@
   margin-bottom: 8rpx;
 }
 
+/* 导航标签（热门/最新/高分） */
+.nav-tabs {
+  display: flex;
+  padding: 16rpx 24rpx 8rpx;
+  gap: 16rpx;
+}
+
+.nav-item {
+  padding: 10rpx 28rpx;
+  font-size: 26rpx;
+  color: #666;
+  background-color: #ffffff;
+  border-radius: 28rpx;
+  border: 2rpx solid #eee;
+}
+
+.nav-item-active {
+  color: #e94560;
+  background-color: rgba(233, 69, 96, 0.06);
+  border-color: #e94560;
+}
+
 /* 影视列表 */
 .video-list {
   padding: 8rpx 24rpx;
@@ -56,7 +78,6 @@
   margin-bottom: 20rpx;
 }
 
-/* 加载更多 */
 .loading-more {
   display: flex;
   justify-content: center;
@@ -65,7 +86,6 @@
   color: #999;
 }
 
-/* 空状态 */
 .empty-state {
   display: flex;
   flex-direction: column;

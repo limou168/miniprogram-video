@@ -33,4 +33,5 @@ public class VideoVO {
     private Long playCount;
     private Integer isRecommend;
     private List<EpisodeVO> episodes;
+    private List<VideoSourceVO> sources;
 }

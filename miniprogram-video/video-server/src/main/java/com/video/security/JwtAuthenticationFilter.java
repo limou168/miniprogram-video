@@ -26,13 +26,17 @@ public class JwtAuthenticationFilter implements Filter {
     @Autowired(required = false)
     private RedisTemplate<String, Object> redisTemplate;
 
-    // 不需要认证的路径
+    // 不需要认证的路径（除播放页和用户相关外均可匿名访问）
     private static final List<String> EXCLUDE_PATHS = List.of(
             "/api/user/login",
             "/api/user/register",
+            "/api/user/refresh",
             "/api/category/",
             "/api/video/list",
-            "/api/video/hot"
+            "/api/video/",
+            "/api/video/hot",
+            "/api/video/search",
+            "/api/video/tags"
     );
 
     private static final String TOKEN_PREFIX = "token:";

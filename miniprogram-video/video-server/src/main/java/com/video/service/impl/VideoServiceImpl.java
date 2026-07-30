@@ -14,6 +14,7 @@ import com.video.service.CategoryService;
 import com.video.service.CosService;
 import com.video.service.VideoEpisodeService;
 import com.video.service.VideoService;
+import com.video.service.VideoSourceService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
 
     private final CategoryService categoryService;
     private final VideoEpisodeService videoEpisodeService;
+    private final VideoSourceService videoSourceService;
     private final CosService cosService;
     private final VideoMapper videoMapper;
     @Autowired(required = false)
@@ -146,6 +148,9 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
                 .playCount(video.getPlayCount())
                 .isRecommend(video.getIsRecommend())
                 .build();
+
+        // 获取播放源
+        vo.setSources(videoSourceService.getSources(id, 0));
 
         // 若为电视剧，填充分集列表
         if (video.getCategoryId() != null && video.getCategoryId() == 2) {
@@ -271,6 +276,44 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
                     .distinct()
                     .collect(Collectors.toList());
         }
+    }
+
+    @Override
+    public List<String> getTagsByCategory(Long categoryId) {
+        // 先从 Redis 获取（如果可用）
+        String cacheKey = "video:tags:" + categoryId;
+        if (redisTemplate != null) {
+            Object cached = redisTemplate.opsForValue().get(cacheKey);
+            if (cached instanceof List) {
+                return (List<String>) cached;
+            }
+        }
+
+        // 从数据库查询该分类下所有标签字符串（去重）
+        List<Video> videos = list(new LambdaQueryWrapper<Video>()
+                .eq(Video::getCategoryId, categoryId)
+                .eq(Video::getStatus, 1)
+                .isNotNull(Video::getTags)
+                .ne(Video::getTags, "")
+                .select(Video::getTags));
+
+        // 解析标签并去重（标签以逗号分隔，如"动作,冒险"）
+        List<String> tags = videos.stream()
+                .map(Video::getTags)
+                .filter(t -> t != null && !t.trim().isEmpty())
+                .flatMap(t -> Arrays.stream(t.split(",")))
+                .map(String::trim)
+                .filter(t -> !t.isEmpty())
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+
+        // 写入缓存（仅当 Redis 可用时）
+        if (redisTemplate != null) {
+            redisTemplate.opsForValue().set(cacheKey, tags, 30, TimeUnit.MINUTES);
+        }
+
+        return tags;
     }
 
     // ==================== 私有方法 ====================

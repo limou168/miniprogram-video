@@ -1,49 +1,67 @@
-// 主页
+// 主页（默认展示热门、最新、推荐视频）
 const { categoryApi, videoApi } = require('../../utils/api');
 
 Page({
   data: {
-    // 轮播图
+    // 轮播推荐
     banners: [],
 
     // 分类
     categories: [],
     activeCategoryId: 0,
 
+    // 导航标签
+    navTabs: [
+      { key: 'play_count', name: '🔥 热门' },
+      { key: 'time', name: '🕐 最新' },
+      { key: 'score', name: '⭐ 高分' }
+    ],
+    activeNav: 'play_count',
+
     // 影视列表
     videoList: [],
     page: 1,
     size: 20,
     hasMore: true,
-    loading: false
+    loading: false,
+
+    // 当前排序
+    orderBy: 'play_count'
   },
 
   onLoad() {
     this.loadCategories();
-    this.loadHotVideos();
+    this.loadBanners();
     this.loadVideoList();
   },
 
   onShow() {
-    // 每次显示时刷新（从其他 tab 切回来）
+    // 每次显示时刷新
   },
 
-  // 下拉刷新
   onPullDownRefresh() {
     this.setData({ page: 1, videoList: [], hasMore: true });
-    this.loadHotVideos();
+    this.loadBanners();
     this.loadVideoList();
     wx.stopPullDownRefresh();
   },
 
-  // 上拉加载更多
   onReachBottom() {
     if (this.data.hasMore && !this.data.loading) {
       this.loadVideoList();
     }
   },
 
-  // ==================== 分类 ====================
+  // 加载轮播（热门前5）
+  async loadBanners() {
+    try {
+      const result = await videoApi.list({ page: 1, size: 5, orderBy: 'play_count' });
+      this.setData({ banners: result.records || [] });
+    } catch (err) {
+      console.error('加载轮播失败:', err);
+    }
+  },
+
   async loadCategories() {
     try {
       const categories = await categoryApi.list();
@@ -53,25 +71,13 @@ Page({
     }
   },
 
-  // ==================== 轮播图 ====================
-  async loadHotVideos() {
-    try {
-      const result = await videoApi.hot();
-      const banners = (result.records || []).slice(0, 5);
-      this.setData({ banners });
-    } catch (err) {
-      console.error('加载热门失败:', err);
-    }
-  },
-
-  // ==================== 影视列表 ====================
   async loadVideoList() {
     if (this.data.loading) return;
     this.setData({ loading: true });
 
     try {
-      const { page, size, activeCategoryId } = this.data;
-      const params = { page, size };
+      const { page, size, activeCategoryId, orderBy } = this.data;
+      const params = { page, size, orderBy };
       if (activeCategoryId > 0) {
         params.categoryId = activeCategoryId;
       }
@@ -91,7 +97,20 @@ Page({
     }
   },
 
-  // ==================== 事件处理 ====================
+  // 导航标签切换
+  onNavChange(e) {
+    const key = e.currentTarget.dataset.key;
+    if (key === this.data.activeNav) return;
+    this.setData({
+      activeNav: key,
+      orderBy: key,
+      page: 1,
+      videoList: [],
+      hasMore: true
+    });
+    this.loadVideoList();
+  },
+
   // 分类切换
   onCategoryChange(e) {
     const { id } = e.detail;
@@ -104,12 +123,10 @@ Page({
     this.loadVideoList();
   },
 
-  // 点击搜索栏 → 跳转搜索页
   goSearch() {
     wx.navigateTo({ url: '/pages/search/search' });
   },
 
-  // 搜索事件 → 跳转搜索结果
   goSearchPage(e) {
     const { keyword } = e.detail;
     if (keyword) {
@@ -117,13 +134,11 @@ Page({
     }
   },
 
-  // 点击影视详情
   goDetail(e) {
     const id = e.currentTarget.dataset.id;
     wx.navigateTo({ url: '/pages/detail/detail?id=' + id });
   },
 
-  // 分享
   onShareAppMessage() {
     return {
       title: '光影影视 - 海量影视随心看',

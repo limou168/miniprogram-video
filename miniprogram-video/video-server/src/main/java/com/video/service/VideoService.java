@@ -37,4 +37,9 @@ public interface VideoService extends IService<Video> {
      * 仅根据标题匹配，返回匹配的标题列表
      */
     List<String> searchSuggestions(String keyword, Integer limit);
+
+    /**
+     * 获取指定分类下的标签列表
+     */
+    List<String> getTagsByCategory(Long categoryId);
 }

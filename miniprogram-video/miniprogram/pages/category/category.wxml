@@ -1,11 +1,48 @@
-<!-- 分类影视列表页 -->
+<!-- 分类影视列表页（二级分类） -->
 <view class="category-container">
   <!-- 搜索栏 -->
   <search-bar bindtap="goSearch" />
 
-  <!-- 分类标签 -->
+  <!-- 分类标签（可点击触发二级分类） -->
   <view class="tabs-wrapper">
-    <category-tabs list="{{categories}}" activeId="{{activeCategoryId}}" bindchange="onCategoryChange" />
+    <scroll-view class="tabs-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="tabs-container">
+        <view
+          class="tab-item {{activeCategoryId === 0 && !activeTag ? 'tab-item-active' : ''}}"
+          data-id="{{0}}"
+          data-name="全部"
+          bindtap="onCategoryTap"
+        >
+          <text>全部</text>
+        </view>
+        <view
+          wx:for="{{categories}}" wx:key="id"
+          class="tab-item {{activeCategoryId === item.id ? 'tab-item-active' : ''}}"
+          data-id="{{item.id}}"
+          data-name="{{item.name}}"
+          bindtap="onCategoryTap"
+        >
+          <text>{{item.name}}</text>
+          <text class="tab-arrow" wx:if="{{item.id === activeCategoryId && activeTag}}">▼</text>
+        </view>
+      </view>
+    </scroll-view>
+    <!-- 当前二级标签 -->
+    <view class="active-tag-bar" wx:if="{{activeTag}}">
+      <text class="active-tag-label">{{activeTag}}</text>
+    </view>
+  </view>
+
+  <!-- 排序栏 -->
+  <view class="order-bar">
+    <view
+      class="order-item {{orderBy === item.key ? 'order-item-active' : ''}}"
+      wx:for="{{orderOptions}}" wx:key="key"
+      data-key="{{item.key}}"
+      bindtap="onOrderChange"
+    >
+      <text>{{item.name}}</text>
+    </view>
   </view>
 
   <!-- 影视列表 -->
@@ -16,17 +53,46 @@
       </view>
     </view>
 
-    <!-- 加载状态 -->
     <view class="loading-more" wx:if="{{videoList.length > 0}}">
       <text wx:if="{{loading}}">加载中...</text>
       <text wx:elif="{{hasMore}}">上拉加载更多</text>
       <text wx:else>— 没有更多了 —</text>
     </view>
 
-    <!-- 空状态 -->
     <view class="empty-state" wx:if="{{!loading && videoList.length === 0}}">
       <text class="empty-icon">📂</text>
       <text class="empty-text">该分类暂无影视</text>
+    </view>
+  </view>
+
+  <!-- 二级分类弹出面板 -->
+  <view class="panel-overlay" wx:if="{{showTagPanel}}" bindtap="onCancelCategory"></view>
+  <view class="panel-bottom" wx:if="{{showTagPanel}}">
+    <view class="panel-header">
+      <text class="panel-title">选择子分类</text>
+      <text class="panel-close" bindtap="onCancelCategory">✕</text>
+    </view>
+    <scroll-view class="panel-body" scroll-y>
+      <view class="tag-grid">
+        <view
+          class="tag-item {{!pendingTag ? 'tag-item-active' : ''}}"
+          data-tag=""
+          bindtap="onSelectTag"
+        >
+          <text>全部</text>
+        </view>
+        <view
+          class="tag-item {{pendingTag === item ? 'tag-item-active' : ''}}"
+          wx:for="{{tags}}" wx:key="*this"
+          data-tag="{{item}}"
+          bindtap="onSelectTag"
+        >
+          <text>{{item}}</text>
+        </view>
+      </view>
+    </scroll-view>
+    <view class="panel-footer">
+      <button class="confirm-btn" bindtap="onConfirmCategory">确认</button>
     </view>
   </view>
 </view>

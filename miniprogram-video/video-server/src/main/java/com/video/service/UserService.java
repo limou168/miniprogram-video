@@ -30,4 +30,9 @@ public interface UserService extends IService<User> {
      * 修改个人信息
      */
     void updateUserInfo(Long userId, UserVO dto);
+
+    /**
+     * Token 自动续期
+     */
+    LoginVO refreshToken(Long userId);
 }

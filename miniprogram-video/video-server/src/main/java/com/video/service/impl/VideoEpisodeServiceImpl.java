@@ -3,16 +3,20 @@ package com.video.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.video.dto.EpisodeVO;
+import com.video.dto.VideoSourceVO;
 import com.video.entity.VideoEpisode;
+import com.video.entity.VideoSource;
 import com.video.mapper.VideoEpisodeMapper;
 import com.video.service.CosService;
 import com.video.service.VideoEpisodeService;
+import com.video.service.VideoSourceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 

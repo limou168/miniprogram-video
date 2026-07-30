@@ -1,4 +1,4 @@
-// 搜索页（增强版：中文分词搜索 + 搜索建议）
+// 搜索页（增强版：实时搜索建议 + 快速响应）
 const { videoApi } = require('../../utils/api');
 
 const HISTORY_KEY = 'search_history';
@@ -10,12 +10,13 @@ Page({
     searchKeyword: '',
     hasSearched: false,
     searchHistory: [],
-    hotKeys: ['流浪地球', '庆余年', '鬼灭之刃', '狂飙', '封神', '咒术回战'],
+    hotKeys: [],
 
     // 搜索建议
     suggestions: [],
     showSuggestions: false,
     _suggestTimer: null,
+    _searchTimer: null,
 
     // 搜索结果
     videoList: [],
@@ -25,18 +26,23 @@ Page({
     hasMore: true,
     loading: false,
 
-    // 空结果提示
     showNoResult: false
   },
 
   onLoad(options) {
     this.loadHistory();
+    this.loadHotKeys();
 
     if (options.keyword) {
       const keyword = decodeURIComponent(options.keyword);
       this.setData({ keyword });
       this.startSearch(keyword);
     }
+  },
+
+  onUnload() {
+    if (this.data._suggestTimer) clearTimeout(this.data._suggestTimer);
+    if (this.data._searchTimer) clearTimeout(this.data._searchTimer);
   },
 
   onReachBottom() {
@@ -67,7 +73,19 @@ Page({
     this.setData({ searchHistory: [] });
   },
 
-  // ==================== 搜索建议（输入时自动提示） ====================
+  // 获取热门搜索
+  async loadHotKeys() {
+    try {
+      // 直接用播放量最高的视频标题作为热门搜索
+      const result = await videoApi.list({ page: 1, size: 10, orderBy: 'play_count' });
+      const hotKeys = (result.records || []).map(v => v.title).filter(Boolean);
+      this.setData({ hotKeys });
+    } catch (err) {
+      console.error('加载热门搜索失败:', err);
+    }
+  },
+
+  // ==================== 搜索建议 ====================
   onKeywordInput(e) {
     const keyword = e.detail.value;
     this.setData({ keyword });
@@ -75,13 +93,16 @@ Page({
     if (this.data._suggestTimer) {
       clearTimeout(this.data._suggestTimer);
     }
+    if (this.data._searchTimer) {
+      clearTimeout(this.data._searchTimer);
+    }
 
     if (!keyword.trim()) {
       this.setData({ suggestions: [], showSuggestions: false });
       return;
     }
 
-    // 防抖 300ms 后请求建议
+    // 防抖 200ms 后请求建议
     const timer = setTimeout(async () => {
       try {
         const suggestions = await videoApi.suggest({ keyword: keyword.trim(), limit: 8 });
@@ -92,11 +113,10 @@ Page({
       } catch (err) {
         console.error('获取搜索建议失败:', err);
       }
-    }, 300);
+    }, 200);
     this.setData({ _suggestTimer: timer });
   },
 
-  // 点击搜索建议项
   onTapSuggestion(e) {
     const keyword = e.currentTarget.dataset.keyword;
     this.setData({ keyword, showSuggestions: false });

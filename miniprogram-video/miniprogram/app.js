@@ -15,10 +15,12 @@ App({
       });
     }
 
-    // 检查登录状态
+    // 检查登录状态（持久化）
     const token = wx.getStorageSync('token');
+    const userInfo = wx.getStorageSync('userInfo');
     if (token) {
       this.globalData.token = token;
+      this.globalData.userInfo = userInfo || null;
       this.globalData.isLogin = true;
     }
   },

@@ -139,4 +139,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         updateById(user);
     }
+
+    @Override
+    public LoginVO refreshToken(Long userId) {
+        User user = getById(userId);
+        if (user == null || user.getStatus() == 0) {
+            throw new BusinessException("用户不存在或已被禁用");
+        }
+
+        // 生成新 token
+        String newToken = jwtUtil.generateToken(user.getId());
+
+        // 更新 Redis 中的 token（如果 Redis 可用）
+        if (redisTemplate != null) {
+            redisTemplate.opsForValue().set(TOKEN_PREFIX + user.getId(), newToken, 7, TimeUnit.DAYS);
+        }
+
+        return LoginVO.builder()
+                .token(newToken)
+                .userId(user.getId())
+                .nickname(user.getNickname())
+                .avatarUrl(user.getAvatarUrl())
+                .build();
+    }
 }
