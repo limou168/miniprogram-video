@@ -30,7 +30,7 @@ const videoApi = {
   // 影视详情
   detail: (id) => get('/api/video/' + id),
   // 热门推荐
-  hot: () => get('/api/video/hot'),
+  hot: () => get('/api/video/hot', {}, { needAuth: false }),
   // 搜索（支持中文分词，搜索标题/导演/演员/标签/简介）
   search: (params) => get('/api/video/search', params),
   // 搜索建议（输入时下拉提示）

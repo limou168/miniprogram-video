@@ -39,7 +39,9 @@ public class VideoController {
      */
     @GetMapping("/{id}")
     public Result<VideoVO> detail(@PathVariable Long id) {
-        return Result.ok(videoService.getVideoDetail(id));
+        
+        return Result.ok(videoService.getVideoDetail(id)
+        );
     }
 
     /**

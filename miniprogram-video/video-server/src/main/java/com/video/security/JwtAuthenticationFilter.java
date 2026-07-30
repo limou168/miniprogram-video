@@ -31,7 +31,8 @@ public class JwtAuthenticationFilter implements Filter {
             "/api/user/login",
             "/api/user/register",
             "/api/category/",
-            "/api/video/list"
+            "/api/video/list",
+            "/api/video/hot"
     );
 
     private static final String TOKEN_PREFIX = "token:";
@@ -44,6 +45,8 @@ public class JwtAuthenticationFilter implements Filter {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String path = httpRequest.getRequestURI();
+
+        System.out.println("===== 请求路径: " + path + " =====");
 
         // 检查是否在白名单中
         if (isExcluded(path)) {
@@ -77,7 +80,7 @@ public class JwtAuthenticationFilter implements Filter {
         if (redisTemplate != null) {
             String redisToken = (String) redisTemplate.opsForValue().get(TOKEN_PREFIX + userId);
             if (redisToken == null || !redisToken.equals(token)) {
-                sendUnauthorized(response, "登录已过期，请重新登录");
+                sendUnauthorized(response, "登录已过期，请重新登录!!!!!!+cscsc");
                 return;
             }
         }
