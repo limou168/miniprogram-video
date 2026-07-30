@@ -1,12 +1,9 @@
-<!-- 主页（热门/最新/高分） -->
+<!-- 主页（主分类 + 子分类网格 + 排序） -->
 <view class="index-container">
-  <!-- 固定顶部搜索栏 -->
   <search-bar fixed="{{true}}" bindtap="goSearch" bindsearch="goSearchPage" />
-
-  <!-- 搜索栏占位 -->
   <view style="height: 100rpx;"></view>
 
-  <!-- 轮播图（热门推荐） -->
+  <!-- 轮播图 -->
   <view class="banner-section" wx:if="{{banners.length > 0}}">
     <swiper class="banner-swiper" indicator-dots="{{true}}" autoplay="{{true}}" interval="{{4000}}" circular="{{true}}">
       <swiper-item wx:for="{{banners}}" wx:key="id">
@@ -16,20 +13,31 @@
     </swiper>
   </view>
 
-  <!-- 分类标签栏 -->
+  <!-- 主分类标签栏 -->
   <view class="category-section">
-    <category-tabs list="{{categories}}" activeId="{{activeCategoryId}}" bindchange="onCategoryChange" />
+    <scroll-view class="tabs-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="tabs-container">
+        <view class="tab-item {{activeCategoryId === 0 ? 'tab-item-active' : ''}}"
+          data-id="{{0}}" bindtap="onCategoryTap"><text>全部</text></view>
+        <view wx:for="{{categories}}" wx:key="id"
+          class="tab-item {{activeCategoryId === item.id ? 'tab-item-active' : ''}}"
+          data-id="{{item.id}}" bindtap="onCategoryTap">
+          <text>{{item.name}}</text>
+        </view>
+      </view>
+    </scroll-view>
   </view>
 
-  <!-- 导航标签（热门/最新/高分） -->
-  <view class="nav-tabs">
-    <view
-      class="nav-item {{activeNav === item.key ? 'nav-item-active' : ''}}"
-      wx:for="{{navTabs}}" wx:key="key"
-      data-key="{{item.key}}"
-      bindtap="onNavChange"
-    >
-      <text>{{item.name}}</text>
+  <!-- 子分类网格 -->
+  <view class="subcategory-section" wx:if="{{activeCategoryId > 0 && subCategories.length > 0}}">
+    <view class="sub-grid">
+      <view class="sub-item {{!activeSubCategory ? 'sub-item-active' : ''}}"
+        data-tag="" bindtap="onSubCategoryTap"><text>全部</text></view>
+      <view class="sub-item {{activeSubCategory === item ? 'sub-item-active' : ''}}"
+        wx:for="{{subCategories}}" wx:key="*this"
+        data-tag="{{item}}" bindtap="onSubCategoryTap">
+        <text>{{item}}</text>
+      </view>
     </view>
   </view>
 
@@ -40,15 +48,11 @@
         <video-card video="{{item}}" />
       </view>
     </view>
-
-    <!-- 加载状态 -->
     <view class="loading-more" wx:if="{{videoList.length > 0}}">
       <text wx:if="{{loading}}">加载中...</text>
       <text wx:elif="{{hasMore}}">上拉加载更多</text>
       <text wx:else>— 没有更多了 —</text>
     </view>
-
-    <!-- 空状态 -->
     <view class="empty-state" wx:if="{{!loading && videoList.length === 0}}">
       <text class="empty-icon">📭</text>
       <text class="empty-text">暂无影视数据</text>

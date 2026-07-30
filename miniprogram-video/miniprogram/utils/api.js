@@ -25,7 +25,9 @@ const videoApi = {
   search: (params) => get('/api/video/search', params),
   suggest: (params) => get('/api/video/search/suggest', params),
   episodes: (id) => get('/api/video/' + id + '/episodes'),
+  // 多播放源
   sources: (id, episodeNumber) => get('/api/video/' + id + '/sources', { episodeNumber }),
+  // 子分类标签
   tags: (categoryId) => get('/api/video/tags', { categoryId })
 };
 

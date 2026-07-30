@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,7 +51,8 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
 
     @Override
     public PageResult<VideoCardVO> getVideoList(Integer page, Integer size, Long categoryId,
-                                                 String keyword, Integer year, String orderBy) {
+                                                 String keyword, String tag, String excludeTag,
+                                                 Integer year, String orderBy) {
         LambdaQueryWrapper<Video> wrapper = new LambdaQueryWrapper<Video>()
                 .eq(Video::getStatus, 1);
 
@@ -64,9 +66,20 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
             wrapper.eq(Video::getYear, year);
         }
 
+        // 子分类标签筛选（模糊匹配 tags 字段，如 %动作% 可匹配 "动作,冒险"、"剧情,动作" 等）
+        if (StringUtils.hasText(tag)) {
+            wrapper.like(Video::getTags, tag);
+        }
+
+        // 排除含特定标签的内容（默认过滤情色类）
+        if (StringUtils.hasText(excludeTag)) {
+            wrapper.notLike(Video::getTags, excludeTag);
+        }
+
         // 关键词搜索
         if (StringUtils.hasText(keyword)) {
-            wrapper.like(Video::getTitle, keyword);
+            wrapper.and(w -> w.like(Video::getTitle, keyword)
+                             .or(wr -> wr.like(Video::getTags, keyword)));
         }
 
         // 排序
@@ -74,6 +87,8 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
             wrapper.orderByDesc(Video::getScore);
         } else if ("time".equals(orderBy)) {
             wrapper.orderByDesc(Video::getCreateTime);
+        } else if ("year".equals(orderBy)) {
+            wrapper.orderByDesc(Video::getYear).orderByDesc(Video::getPlayCount);
         } else {
             // 默认按播放量排序
             wrapper.orderByDesc(Video::getPlayCount);
@@ -178,7 +193,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         }
 
         // 按播放量排序取前 20
-        return getVideoList(1, 20, null, null, null, "play_count");
+        return getVideoList(1, 20, null, null, null, null, null, "play_count");
     }
 
     @Override
@@ -280,7 +295,6 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
 
     @Override
     public List<String> getTagsByCategory(Long categoryId) {
-        // 先从 Redis 获取（如果可用）
         String cacheKey = "video:tags:" + categoryId;
         if (redisTemplate != null) {
             Object cached = redisTemplate.opsForValue().get(cacheKey);
@@ -289,7 +303,6 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
             }
         }
 
-        // 从数据库查询该分类下所有标签字符串（去重）
         List<Video> videos = list(new LambdaQueryWrapper<Video>()
                 .eq(Video::getCategoryId, categoryId)
                 .eq(Video::getStatus, 1)
@@ -297,18 +310,25 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
                 .ne(Video::getTags, "")
                 .select(Video::getTags));
 
-        // 解析标签并去重（标签以逗号分隔，如"动作,冒险"）
+        // 多分隔符拆分：逗号、中文逗号、斜杠/中文斜杠、顿号、空格
+        // 然后过滤：去空、去英文、去超过2个字符长的残留、去重
+        java.util.regex.Pattern separator = java.util.regex.Pattern.compile("[,\\/、，／\\s]+");
+        java.util.regex.Pattern alphaOnly = java.util.regex.Pattern.compile("^[a-zA-Z\\s\\-0-9]+$");
+        java.util.regex.Pattern tooShort = java.util.regex.Pattern.compile("^[a-zA-Z]{1,2}$"); // 只过滤1-2字母的英文残留
+
         List<String> tags = videos.stream()
                 .map(Video::getTags)
                 .filter(t -> t != null && !t.trim().isEmpty())
-                .flatMap(t -> Arrays.stream(t.split(",")))
+                .flatMap(t -> separator.splitAsStream(t))
                 .map(String::trim)
-                .filter(t -> !t.isEmpty())
+                .filter(t -> !t.isEmpty())                 // 去空
+                .filter(t -> !alphaOnly.matcher(t).matches())  // 去纯字母/数字
+                .filter(t -> !tooShort.matcher(t).matches())   // 去1-2个字符的残留
+                .filter(t -> t.length() < 15)               // 去超长脏数据
                 .distinct()
                 .sorted()
                 .collect(Collectors.toList());
 
-        // 写入缓存（仅当 Redis 可用时）
         if (redisTemplate != null) {
             redisTemplate.opsForValue().set(cacheKey, tags, 30, TimeUnit.MINUTES);
         }

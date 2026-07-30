@@ -156,7 +156,14 @@ Page({
     wx.navigateBack();
   },
 
-  // 分享
+  // 分享（页面内按钮点击）
+  onShare() {
+    wx.showShareMenu({
+      withShareTicket: true
+    });
+  },
+
+  // 分享（右上角菜单）
   onShareAppMessage() {
     return {
       title: this.data.video ? this.data.video.title : '光影影视',

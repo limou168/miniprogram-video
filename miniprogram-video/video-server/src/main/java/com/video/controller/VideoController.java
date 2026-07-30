@@ -33,9 +33,11 @@ public class VideoController {
             @RequestParam(defaultValue = "20") Integer size,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String tag,
+            @RequestParam(required = false) String excludeTag,
             @RequestParam(required = false) Integer year,
             @RequestParam(required = false, defaultValue = "play_count") String orderBy) {
-        return Result.ok(videoService.getVideoList(page, size, categoryId, keyword, year, orderBy));
+        return Result.ok(videoService.getVideoList(page, size, categoryId, keyword, tag, excludeTag, year, orderBy));
     }
 
     /**

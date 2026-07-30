@@ -50,7 +50,7 @@ public class JwtAuthenticationFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String path = httpRequest.getRequestURI();
 
-        System.out.println("===== 请求路径: " + path + " =====");
+        System.out.println("请求路径: " + path );
 
         // 检查是否在白名单中
         if (isExcluded(path)) {

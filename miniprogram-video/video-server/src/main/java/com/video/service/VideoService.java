@@ -11,10 +11,10 @@ import java.util.List;
 public interface VideoService extends IService<Video> {
 
     /**
-     * 分页获取影视列表（可按分类、年份筛选、排序）
+     * 分页获取影视列表（可按分类、标签、年份筛选、排序）
      */
     PageResult<VideoCardVO> getVideoList(Integer page, Integer size, Long categoryId,
-                                          String keyword, Integer year, String orderBy);
+                                          String keyword, String tag, String excludeTag, Integer year, String orderBy);
 
     /**
      * 获取影视详情
