@@ -1,5 +1,6 @@
 E:\project\miniprogram-video\video-server\src\main\java\com\video\common\BusinessException.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\common\GlobalExceptionHandler.java
+E:\project\miniprogram-video\video-server\src\main\java\com\video\common\IdempotentUtil.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\common\JwtUtil.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\common\Result.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\config\CosConfig.java
@@ -26,6 +27,7 @@ E:\project\miniprogram-video\video-server\src\main\java\com\video\dto\ProgressSa
 E:\project\miniprogram-video\video-server\src\main\java\com\video\dto\RegisterDTO.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\dto\UserVO.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\dto\VideoCardVO.java
+E:\project\miniprogram-video\video-server\src\main\java\com\video\dto\VideoSourceVO.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\dto\VideoVO.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\entity\Category.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\entity\Favorite.java
@@ -33,12 +35,14 @@ E:\project\miniprogram-video\video-server\src\main\java\com\video\entity\PlayHis
 E:\project\miniprogram-video\video-server\src\main\java\com\video\entity\User.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\entity\Video.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\entity\VideoEpisode.java
+E:\project\miniprogram-video\video-server\src\main\java\com\video\entity\VideoSource.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\mapper\CategoryMapper.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\mapper\FavoriteMapper.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\mapper\PlayHistoryMapper.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\mapper\UserMapper.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\mapper\VideoEpisodeMapper.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\mapper\VideoMapper.java
+E:\project\miniprogram-video\video-server\src\main\java\com\video\mapper\VideoSourceMapper.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\security\JwtAuthenticationFilter.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\security\UserContext.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\service\CategoryService.java
@@ -50,8 +54,10 @@ E:\project\miniprogram-video\video-server\src\main\java\com\video\service\impl\P
 E:\project\miniprogram-video\video-server\src\main\java\com\video\service\impl\UserServiceImpl.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\service\impl\VideoEpisodeServiceImpl.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\service\impl\VideoServiceImpl.java
+E:\project\miniprogram-video\video-server\src\main\java\com\video\service\impl\VideoSourceServiceImpl.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\service\PlayHistoryService.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\service\UserService.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\service\VideoEpisodeService.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\service\VideoService.java
+E:\project\miniprogram-video\video-server\src\main\java\com\video\service\VideoSourceService.java
 E:\project\miniprogram-video\video-server\src\main\java\com\video\VideoApplication.java
