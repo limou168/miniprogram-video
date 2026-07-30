@@ -94,7 +94,12 @@ public class VideoController {
     public Result<List<VideoSourceVO>> sources(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") Integer episodeNumber) {
-        return Result.ok(videoSourceService.getSources(id, episodeNumber));
+        try {
+            return Result.ok(videoSourceService.getSources(id, episodeNumber));
+        } catch (Exception e) {
+            // 容错：sys_video_source 表不存在时返回空列表
+            return Result.ok(List.of());
+        }
     }
 
     /**

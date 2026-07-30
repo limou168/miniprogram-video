@@ -1,6 +1,7 @@
-// 播放页（支持长按快进、倍速播放、多播放源）
+// 播放页（支持长按快进、倍速播放、多播放源、视频代理）
 const { videoApi, historyApi } = require('../../utils/api');
 const auth = require('../../utils/auth');
+const config = require('../../utils/config');
 
 Page({
   data: {
@@ -63,7 +64,7 @@ Page({
         const episode = episodes.find(e => e.episodeNumber === this.data.episodeNumber);
         if (episode) {
           this.setData({
-            videoUrl: episode.videoUrl || '',
+            videoUrl: this.buildProxyUrl(episode.videoUrl || ''),
             videoTitle: episode.episodeTitle || ('第' + episode.episodeNumber + '集'),
             loading: false
           });
@@ -74,7 +75,7 @@ Page({
 
       const video = await videoApi.detail(this.data.videoId);
       this.setData({
-        videoUrl: video.videoUrl || '',
+        videoUrl: this.buildProxyUrl(video.videoUrl || ''),
         videoTitle: video.title || '',
         playCount: video.playCount || 0,
         loading: false
@@ -99,16 +100,29 @@ Page({
     }
   },
 
+  // 将视频地址转为代理地址（绕过防盗链）
+  buildProxyUrl(originalUrl) {
+    if (!originalUrl) return '';
+    // 已经是代理地址就不再转换
+    if (originalUrl.includes('/api/proxy/video')) return originalUrl;
+    // 获取 API 基础地址
+    const base = config.useCloudCallContainer
+      ? config.baseUrl  // 云端模式下用 baseUrl
+      : config.baseUrl;
+    const encoded = encodeURIComponent(originalUrl);
+    return base + '/api/proxy/video?url=' + encoded;
+  },
+
   // 加载播放源
   async loadSources() {
     try {
       const sources = await videoApi.sources(this.data.videoId, this.data.episodeNumber);
       this.setData({ sources: sources || [] });
-      // 如果当前源索引有效，使用对应URL
+      // 如果当前源索引有效，使用代理URL
       if (sources && sources.length > this.data.currentSourceIndex) {
         const selectedSource = sources[this.data.currentSourceIndex];
         if (selectedSource && selectedSource.sourceUrl) {
-          this.setData({ videoUrl: selectedSource.sourceUrl });
+          this.setData({ videoUrl: this.buildProxyUrl(selectedSource.sourceUrl) });
         }
       }
     } catch (err) {
@@ -123,7 +137,7 @@ Page({
       const source = this.data.sources[index];
       this.setData({
         currentSourceIndex: index,
-        videoUrl: source.sourceUrl,
+        videoUrl: this.buildProxyUrl(source.sourceUrl),
         showSourcePanel: false
       });
       // 重新加载视频
@@ -161,7 +175,7 @@ Page({
     const touch = e.touches[0];
     if (!touch) return;
 
-    const windowWidth = wx.getSystemInfoSync().windowWidth;
+    const windowWidth = wx.getWindowInfo().windowWidth;
     // 右侧40%区域为快进区，左侧40%为快退区
     if (touch.clientX > windowWidth * 0.6) {
       this.data.pressing = true;

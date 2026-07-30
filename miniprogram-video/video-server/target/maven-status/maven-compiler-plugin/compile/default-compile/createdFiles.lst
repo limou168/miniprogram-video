@@ -70,3 +70,4 @@ com\video\dto\HistoryVO$HistoryVOBuilder.class
 com\video\dto\LoginVO.class
 com\video\entity\Video.class
 com\video\common\Result.class
+com\video\controller\ProxyController.class

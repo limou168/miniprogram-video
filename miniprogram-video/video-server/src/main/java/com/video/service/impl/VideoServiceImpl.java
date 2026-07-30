@@ -164,8 +164,12 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
                 .isRecommend(video.getIsRecommend())
                 .build();
 
-        // 获取播放源
-        vo.setSources(videoSourceService.getSources(id, 0));
+        // 获取播放源（容错：表不存在时不阻塞详情页）
+        try {
+            vo.setSources(videoSourceService.getSources(id, 0));
+        } catch (Exception e) {
+            log.warn("获取播放源失败(可能sys_video_source表不存在): {}", e.getMessage());
+        }
 
         // 若为电视剧，填充分集列表
         if (video.getCategoryId() != null && video.getCategoryId() == 2) {
