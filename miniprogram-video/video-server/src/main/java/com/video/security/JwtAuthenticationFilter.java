@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter implements Filter {
             "/api/user/login",
             "/api/user/register",
             "/api/category/",
-            "/api/video/"
+            "/api/video/list"
     );
 
     private static final String TOKEN_PREFIX = "token:";

@@ -31,8 +31,10 @@ const videoApi = {
   detail: (id) => get('/api/video/' + id),
   // 热门推荐
   hot: () => get('/api/video/hot'),
-  // 搜索
+  // 搜索（支持中文分词，搜索标题/导演/演员/标签/简介）
   search: (params) => get('/api/video/search', params),
+  // 搜索建议（输入时下拉提示）
+  suggest: (params) => get('/api/video/search/suggest', params),
   // 获取分集列表
   episodes: (id) => get('/api/video/' + id + '/episodes')
 };

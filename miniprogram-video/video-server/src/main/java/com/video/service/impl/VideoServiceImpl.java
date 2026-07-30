@@ -15,11 +15,14 @@ import com.video.service.CosService;
 import com.video.service.VideoEpisodeService;
 import com.video.service.VideoService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -29,9 +32,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements VideoService {
 
+    private static final Logger log = LoggerFactory.getLogger(VideoServiceImpl.class);
+
     private final CategoryService categoryService;
     private final VideoEpisodeService videoEpisodeService;
     private final CosService cosService;
+    private final VideoMapper videoMapper;
     @Autowired(required = false)
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -100,7 +106,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         if (redisTemplate != null) {
             Object cached = redisTemplate.opsForValue().get(cacheKey);
             if (cached instanceof VideoVO) {
-                // 异步更新播放量（简单实现：直接 DB +1）
+                // 异步更新播放量
                 Video video = getById(id);
                 if (video != null) {
                     video.setPlayCount((video.getPlayCount() == null ? 0 : video.getPlayCount()) + 1);
@@ -175,7 +181,120 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         if (!StringUtils.hasText(keyword)) {
             return PageResult.of(0, page, size, List.of());
         }
-        return getVideoList(page, size, null, keyword, null, null);
+
+        // 清理关键词（移除特殊字符，避免 MATCH AGAINST 语法错误）
+        String cleanKeyword = keyword.trim()
+                .replace("'", "''")
+                .replaceAll("[+\\-<>()~*\"@]", " ");
+
+        // 对于太短的关键词（1-2个字符），直接走 LIKE 搜索
+        if (cleanKeyword.length() <= 2) {
+            LambdaQueryWrapper<Video> wrapper = new LambdaQueryWrapper<Video>()
+                    .eq(Video::getStatus, 1)
+                    .like(Video::getTitle, cleanKeyword);
+            Page<Video> videoPage = page(new Page<>(page, size), wrapper);
+            return buildSearchResult(videoPage, page, size);
+        }
+
+        // 构建 MATCH AGAINST 的布尔模式关键词
+        // 每个词加 + 表示必须包含，用 * 支持前缀匹配
+        String ftKeyword = Arrays.stream(cleanKeyword.split("\\s+"))
+                .filter(w -> w.length() > 0)
+                .map(w -> "+" + w + "*")
+                .collect(Collectors.joining(" "));
+
+        try {
+            // 尝试全文搜索
+            Page<Video> videoPage = new Page<>(page, size);
+            videoMapper.searchFulltext(videoPage, ftKeyword);
+
+            // 如果全文搜索没有结果，回退到 LIKE 搜索
+            if (videoPage.getRecords() == null || videoPage.getRecords().isEmpty()) {
+                log.debug("全文搜索无结果，回退到 LIKE 搜索: {}", cleanKeyword);
+                Page<Video> likePage = new Page<>(page, size);
+                videoMapper.searchLike(likePage, cleanKeyword);
+                return buildSearchResult(likePage, page, size);
+            }
+
+            return buildSearchResult(videoPage, page, size);
+        } catch (Exception e) {
+            // FULLTEXT 搜索异常时回退到 LIKE
+            log.warn("全文搜索异常 ({}), 回退到 LIKE 搜索", e.getMessage());
+            Page<Video> likePage = new Page<>(page, size);
+            videoMapper.searchLike(likePage, cleanKeyword);
+            return buildSearchResult(likePage, page, size);
+        }
+    }
+
+    @Override
+    public List<String> searchSuggestions(String keyword, Integer limit) {
+        if (!StringUtils.hasText(keyword)) {
+            return List.of();
+        }
+
+        if (limit == null || limit <= 0) {
+            limit = 10;
+        }
+
+        String cleanKeyword = keyword.trim()
+                .replace("'", "''")
+                .replaceAll("[+\\-<>()~*\"@]", " ");
+
+        // 太短的词直接用 LIKE
+        if (cleanKeyword.length() <= 2) {
+            LambdaQueryWrapper<Video> wrapper = new LambdaQueryWrapper<Video>()
+                    .eq(Video::getStatus, 1)
+                    .like(Video::getTitle, cleanKeyword)
+                    .orderByDesc(Video::getPlayCount)
+                    .last("LIMIT " + limit);
+            return list(wrapper).stream()
+                    .map(Video::getTitle)
+                    .distinct()
+                    .collect(Collectors.toList());
+        }
+
+        try {
+            String ftKeyword = Arrays.stream(cleanKeyword.split("\\s+"))
+                    .filter(w -> w.length() > 0)
+                    .map(w -> "+" + w + "*")
+                    .collect(Collectors.joining(" "));
+            return videoMapper.searchSuggestions(ftKeyword, limit);
+        } catch (Exception e) {
+            log.warn("搜索建议异常 ({}), 回退到 LIKE", e.getMessage());
+            LambdaQueryWrapper<Video> wrapper = new LambdaQueryWrapper<Video>()
+                    .eq(Video::getStatus, 1)
+                    .like(Video::getTitle, cleanKeyword)
+                    .orderByDesc(Video::getPlayCount)
+                    .last("LIMIT " + limit);
+            return list(wrapper).stream()
+                    .map(Video::getTitle)
+                    .distinct()
+                    .collect(Collectors.toList());
+        }
+    }
+
+    // ==================== 私有方法 ====================
+
+    /**
+     * 构建搜索结果的 VO
+     */
+    private PageResult<VideoCardVO> buildSearchResult(Page<Video> videoPage, Integer page, Integer size) {
+        Map<Long, String> categoryMap = getCategoryNameMap();
+
+        List<VideoCardVO> records = videoPage.getRecords().stream()
+                .map(v -> VideoCardVO.builder()
+                        .id(v.getId())
+                        .title(v.getTitle())
+                        .coverUrl(cosService.transformUrl(v.getCoverUrl()))
+                        .categoryName(categoryMap.getOrDefault(v.getCategoryId(), ""))
+                        .year(v.getYear())
+                        .duration(v.getDuration())
+                        .score(v.getScore())
+                        .playCount(v.getPlayCount())
+                        .build())
+                .collect(Collectors.toList());
+
+        return PageResult.of(videoPage.getTotal(), page, size, records);
     }
 
     /**

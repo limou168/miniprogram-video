@@ -1,4 +1,4 @@
-// 搜索页
+// 搜索页（增强版：中文分词搜索 + 搜索建议）
 const { videoApi } = require('../../utils/api');
 
 const HISTORY_KEY = 'search_history';
@@ -12,29 +12,36 @@ Page({
     searchHistory: [],
     hotKeys: ['流浪地球', '庆余年', '鬼灭之刃', '狂飙', '封神', '咒术回战'],
 
+    // 搜索建议
+    suggestions: [],
+    showSuggestions: false,
+    _suggestTimer: null,
+
     // 搜索结果
     videoList: [],
     total: 0,
     page: 1,
     size: 20,
     hasMore: true,
-    loading: false
+    loading: false,
+
+    // 空结果提示
+    showNoResult: false
   },
 
   onLoad(options) {
     this.loadHistory();
 
-    // 如果从其他页面带入了搜索关键词
     if (options.keyword) {
       const keyword = decodeURIComponent(options.keyword);
-      this.setData({ keyword, searchKeyword: keyword, hasSearched: true });
-      this.doSearch();
+      this.setData({ keyword });
+      this.startSearch(keyword);
     }
   },
 
   onReachBottom() {
     if (this.data.hasSearched && this.data.hasMore && !this.data.loading) {
-      this.doSearch();
+      this.loadMore();
     }
   },
 
@@ -46,11 +53,8 @@ Page({
 
   saveHistory(keyword) {
     let history = wx.getStorageSync(HISTORY_KEY) || [];
-    // 移除重复项
     history = history.filter(item => item !== keyword);
-    // 添加到开头
     history.unshift(keyword);
-    // 限制数量
     if (history.length > MAX_HISTORY) {
       history = history.slice(0, MAX_HISTORY);
     }
@@ -63,15 +67,51 @@ Page({
     this.setData({ searchHistory: [] });
   },
 
-  // ==================== 搜索 ====================
+  // ==================== 搜索建议（输入时自动提示） ====================
   onKeywordInput(e) {
-    this.setData({ keyword: e.detail.value });
+    const keyword = e.detail.value;
+    this.setData({ keyword });
+
+    if (this.data._suggestTimer) {
+      clearTimeout(this.data._suggestTimer);
+    }
+
+    if (!keyword.trim()) {
+      this.setData({ suggestions: [], showSuggestions: false });
+      return;
+    }
+
+    // 防抖 300ms 后请求建议
+    const timer = setTimeout(async () => {
+      try {
+        const suggestions = await videoApi.suggest({ keyword: keyword.trim(), limit: 8 });
+        this.setData({
+          suggestions,
+          showSuggestions: suggestions.length > 0
+        });
+      } catch (err) {
+        console.error('获取搜索建议失败:', err);
+      }
+    }, 300);
+    this.setData({ _suggestTimer: timer });
   },
 
+  // 点击搜索建议项
+  onTapSuggestion(e) {
+    const keyword = e.currentTarget.dataset.keyword;
+    this.setData({ keyword, showSuggestions: false });
+    this.startSearch(keyword);
+  },
+
+  // ==================== 搜索 ====================
   onSearch(e) {
     const keyword = (e.detail.value || this.data.keyword).trim();
     if (!keyword) return;
+    this.setData({ showSuggestions: false });
+    this.startSearch(keyword);
+  },
 
+  startSearch(keyword) {
     this.saveHistory(keyword);
     this.setData({
       searchKeyword: keyword,
@@ -79,12 +119,13 @@ Page({
       page: 1,
       videoList: [],
       total: 0,
-      hasMore: true
+      hasMore: true,
+      showNoResult: false
     });
-    this.doSearch();
+    this.loadMore();
   },
 
-  async doSearch() {
+  async loadMore() {
     if (this.data.loading) return;
     this.setData({ loading: true });
 
@@ -97,24 +138,25 @@ Page({
         videoList: newList,
         total: result.total,
         page: page + 1,
-        hasMore: result.records && result.records.length >= size
+        hasMore: result.records && result.records.length >= size,
+        loading: false,
+        showNoResult: newList.length === 0
       });
     } catch (err) {
       console.error('搜索失败:', err);
-    } finally {
       this.setData({ loading: false });
     }
   },
 
-  // 点击历史/热门标签
+  // ==================== 事件 ====================
   onTapHistory(e) {
     const keyword = e.currentTarget.dataset.keyword;
-    this.setData({ keyword });
-    this.onSearch({ detail: { value: keyword } });
+    this.setData({ keyword, showSuggestions: false });
+    this.startSearch(keyword);
   },
 
   onClear() {
-    this.setData({ keyword: '' });
+    this.setData({ keyword: '', suggestions: [], showSuggestions: false });
   },
 
   goBack() {

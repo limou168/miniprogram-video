@@ -51,7 +51,7 @@ public class VideoController {
     }
 
     /**
-     * 搜索
+     * 搜索（使用 MySQL FULLTEXT 中文分词，搜索标题/导演/演员/标签/简介）
      */
     @GetMapping("/search")
     public Result<PageResult<VideoCardVO>> search(
@@ -59,6 +59,16 @@ public class VideoController {
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "20") Integer size) {
         return Result.ok(videoService.search(keyword, page, size));
+    }
+
+    /**
+     * 搜索建议（输入时下拉提示，仅匹配标题）
+     */
+    @GetMapping("/search/suggest")
+    public Result<List<String>> suggest(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "10") Integer limit) {
+        return Result.ok(videoService.searchSuggestions(keyword, limit));
     }
 
     /**
