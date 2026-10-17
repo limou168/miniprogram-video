@@ -1,0 +1,1 @@
+{'code': 200, 'message': 'success', 'data': {'token': 'eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI3MjIiLCJpYXQiOjE3OTIyMTc0ODgsImV4cCI6MTc5MjgyMjI4OH0.6d1kYoOxs8fQ7cW8KX2WT-W6MOsQ84U_ehT2U5jLVhPh57Oo9tGDi-AWSAZr3DWT', 'userId': 722, 'nickname': 'admin', 'avatarUrl': ''}} 登录结果admin

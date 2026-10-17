@@ -1,0 +1,2 @@
+pytest .\test.py --alluredir=./allure-results --clean-alluredir      
+ E:\allure-2.46.1\bin\allure serve ./allure-results                   

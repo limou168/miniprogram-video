@@ -1,0 +1,44 @@
+<!-- 登录页 -->
+<view class="login-container">
+  <!-- Logo 区域 -->
+  <view class="logo-section">
+    <view class="logo-icon">🎬</view>
+    <text class="app-name">光影影视</text>
+    <text class="app-slogan">海量影视，随心观看</text>
+  </view>
+
+  <!-- 表单区域 -->
+  <view class="form-section">
+    <view class="input-group">
+      <view class="input-icon">👤</view>
+      <input
+        class="input-field"
+        placeholder="请输入用户名"
+        placeholder-class="placeholder"
+        value="{{username}}"
+        bindinput="onUsernameInput"
+      />
+    </view>
+
+    <view class="input-group">
+      <view class="input-icon">🔒</view>
+      <input
+        class="input-field"
+        type="password"
+        placeholder="请输入密码"
+        placeholder-class="placeholder"
+        value="{{password}}"
+        bindinput="onPasswordInput"
+      />
+    </view>
+
+    <button class="login-btn" bindtap="onLogin" loading="{{loading}}" disabled="{{loading}}">
+      {{loading ? '登录中...' : '登 录'}}
+    </button>
+  </view>
+
+  <!-- 底部链接 -->
+  <view class="footer-links">
+    <text class="link-text" bindtap="goRegister">还没有账号？立即注册</text>
+  </view>
+</view>

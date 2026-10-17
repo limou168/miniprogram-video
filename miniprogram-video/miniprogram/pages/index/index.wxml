@@ -1,0 +1,61 @@
+<!-- 主页（主分类 + 子分类网格 + 排序） -->
+<view class="index-container">
+  <search-bar fixed="{{true}}" bindtap="goSearch" bindsearch="goSearchPage" />
+  <view style="height: 100rpx;"></view>
+
+  <!-- 轮播图 -->
+  <view class="banner-section" wx:if="{{banners.length > 0}}">
+    <swiper class="banner-swiper" indicator-dots="{{true}}" autoplay="{{true}}" interval="{{4000}}" circular="{{true}}">
+      <swiper-item wx:for="{{banners}}" wx:key="id">
+        <image class="banner-img" src="{{item.coverUrl}}" mode="aspectFill" bindtap="goDetail" data-id="{{item.id}}" />
+        <view class="banner-title">{{item.title}}</view>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- 主分类标签栏 -->
+  <view class="category-section">
+    <scroll-view class="tabs-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="tabs-container">
+        <view class="tab-item {{activeCategoryId === 0 ? 'tab-item-active' : ''}}"
+          data-id="{{0}}" bindtap="onCategoryTap"><text>全部</text></view>
+        <view wx:for="{{categories}}" wx:key="id"
+          class="tab-item {{activeCategoryId === item.id ? 'tab-item-active' : ''}}"
+          data-id="{{item.id}}" bindtap="onCategoryTap">
+          <text>{{item.name}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 子分类网格 -->
+  <view class="subcategory-section" wx:if="{{activeCategoryId > 0 && subCategories.length > 0}}">
+    <view class="sub-grid">
+      <view class="sub-item {{!activeSubCategory ? 'sub-item-active' : ''}}"
+        data-tag="" bindtap="onSubCategoryTap"><text>全部</text></view>
+      <view class="sub-item {{activeSubCategory === item ? 'sub-item-active' : ''}}"
+        wx:for="{{subCategories}}" wx:key="*this"
+        data-tag="{{item}}" bindtap="onSubCategoryTap">
+        <text>{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 影视列表 -->
+  <view class="video-list">
+    <view class="video-grid">
+      <view class="grid-item" wx:for="{{videoList}}" wx:key="id">
+        <video-card video="{{item}}" />
+      </view>
+    </view>
+    <view class="loading-more" wx:if="{{videoList.length > 0}}">
+      <text wx:if="{{loading}}">加载中...</text>
+      <text wx:elif="{{hasMore}}">上拉加载更多</text>
+      <text wx:else>— 没有更多了 —</text>
+    </view>
+    <view class="empty-state" wx:if="{{!loading && videoList.length === 0}}">
+      <text class="empty-icon">📭</text>
+      <text class="empty-text">暂无影视数据</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,58 @@
+<!-- 个人中心页 -->
+<view class="user-container">
+  <!-- 用户信息头部 -->
+  <view class="user-header">
+    <view class="user-bg"></view>
+    <!-- 未登录 -->
+    <view class="user-info" wx:if="{{!isLogin}}">
+      <view class="avatar-placeholder">👤</view>
+      <text class="login-tip" bindtap="goLogin">点击登录，畅享观影</text>
+    </view>
+    <!-- 已登录 -->
+    <view class="user-info" wx:if="{{isLogin}}">
+      <image class="user-avatar" src="{{userInfo.avatarUrl || ''}}" mode="aspectFill" wx:if="{{userInfo.avatarUrl}}" />
+      <view class="avatar-placeholder" wx:else>😊</view>
+      <text class="user-nickname">{{userInfo.nickname || '用户'}}</text>
+      <text class="user-id">ID: {{userInfo.userId}}</text>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-section">
+    <!-- 播放历史 -->
+    <view class="menu-item" bindtap="goHistory">
+      <text class="menu-icon">🕐</text>
+      <text class="menu-text">播放历史</text>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <!-- 我的收藏 -->
+    <view class="menu-item" bindtap="goFavorites">
+      <text class="menu-icon">❤️</text>
+      <text class="menu-text">我的收藏</text>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <!-- 修改密码 -->
+    <view class="menu-item" bindtap="goChangePassword">
+      <text class="menu-icon">🔒</text>
+      <text class="menu-text">修改密码</text>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <!-- 关于 -->
+    <view class="menu-item" bindtap="goAbout">
+      <text class="menu-icon">ℹ️</text>
+      <text class="menu-text">关于我们</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-section" wx:if="{{isLogin}}">
+    <button class="logout-btn" bindtap="onLogout">退出登录</button>
+  </view>
+
+  <!-- 版本号 -->
+  <view class="version-text">光影影视 v1.0.0</view>
+</view>

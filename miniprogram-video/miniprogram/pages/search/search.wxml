@@ -1,0 +1,101 @@
+<!-- 搜索页（增强版） -->
+<view class="search-container">
+  <!-- 搜索栏 -->
+  <view class="search-header">
+    <view class="search-box-wrapper">
+      <view class="search-box">
+        <text class="search-icon">🔍</text>
+        <input
+          class="search-input"
+          placeholder="搜索影视、演员、导演..."
+          placeholder-class="search-placeholder"
+          value="{{keyword}}"
+          bindinput="onKeywordInput"
+          bindconfirm="onSearch"
+          confirm-type="search"
+          focus="{{!hasSearched}}"
+        />
+        <text class="search-clear" wx:if="{{keyword}}" bindtap="onClear">✕</text>
+      </view>
+      <!-- 搜索建议下拉 -->
+      <view class="suggestions-dropdown" wx:if="{{showSuggestions && suggestions.length > 0}}">
+        <view
+          class="suggestion-item"
+          wx:for="{{suggestions}}"
+          wx:key="*this"
+          bindtap="onTapSuggestion"
+          data-keyword="{{item}}"
+        >
+          <text class="suggest-icon">🔍</text>
+          <text class="suggest-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+    <text class="cancel-btn" bindtap="goBack">取消</text>
+  </view>
+
+  <!-- 搜索历史 / 热门搜索 -->
+  <view class="search-body" wx:if="{{!hasSearched}}">
+    <view class="history-section" wx:if="{{searchHistory.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">搜索历史</text>
+        <text class="clear-btn" bindtap="clearHistory">清除</text>
+      </view>
+      <view class="tag-list">
+        <view
+          class="tag-item"
+          wx:for="{{searchHistory}}"
+          wx:key="*this"
+          bindtap="onTapHistory"
+          data-keyword="{{item}}"
+        >
+          {{item}}
+        </view>
+      </view>
+    </view>
+
+    <view class="hot-section">
+      <text class="section-title">热门搜索</text>
+      <view class="tag-list">
+        <text class="tag-item tag-hot" wx:for="{{hotKeys}}" wx:key="*this" bindtap="onTapHistory" data-keyword="{{item}}">
+          {{item}}
+        </text>
+      </view>
+    </view>
+
+    <!-- 搜索说明 -->
+    <view class="search-tips">
+      <text class="tips-title">💡 搜索小贴士</text>
+      <text class="tips-text">支持按影视名称、导演、演员、标签搜索</text>
+      <text class="tips-text">输入时会有智能提示，帮助快速定位</text>
+    </view>
+  </view>
+
+  <!-- 搜索结果 -->
+  <view class="search-results" wx:if="{{hasSearched}}">
+    <view class="result-header">
+      <text class="result-title">"{{searchKeyword}}" 的搜索结果</text>
+      <text class="result-count">共 {{total}} 部</text>
+    </view>
+
+    <view class="video-grid" wx:if="{{videoList.length > 0}}">
+      <view class="grid-item" wx:for="{{videoList}}" wx:key="id">
+        <video-card video="{{item}}" />
+      </view>
+    </view>
+
+    <!-- 无结果 -->
+    <view class="empty-state" wx:if="{{showNoResult}}">
+      <text class="empty-icon">🔍</text>
+      <text class="empty-text">未找到相关影视</text>
+      <text class="empty-tip">试试搜导演名、演员名，或换个关键词</text>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="loading-more" wx:if="{{videoList.length > 0}}">
+      <text wx:if="{{loading}}">加载中...</text>
+      <text wx:elif="{{hasMore}}">上拉加载更多</text>
+      <text wx:else>— 没有更多了 —</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,23 @@
+<!-- 分类标签栏组件 -->
+<scroll-view class="tabs-scroll" scroll-x="{{true}}" enhanced show-scrollbar="{{false}}">
+  <view class="tabs-container">
+    <view
+      class="tab-item {{activeId === 0 ? 'tab-item-active' : ''}}"
+      data-id="{{0}}"
+      data-name="全部"
+      bindtap="onTapTab"
+    >
+      <text>全部</text>
+    </view>
+    <view
+      wx:for="{{list}}"
+      wx:key="id"
+      class="tab-item {{activeId === item.id ? 'tab-item-active' : ''}}"
+      data-id="{{item.id}}"
+      data-name="{{item.name}}"
+      bindtap="onTapTab"
+    >
+      <text>{{item.name}}</text>
+    </view>
+  </view>
+</scroll-view>

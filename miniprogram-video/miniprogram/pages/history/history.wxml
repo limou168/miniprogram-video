@@ -1,0 +1,45 @@
+<view class="history-container">
+  <!-- 历史列表 -->
+  <view class="history-list" wx:if="{{list.length > 0}}">
+    <view class="history-item" wx:for="{{list}}" wx:key="id">
+      <view class="history-content" bindtap="goDetail" data-id="{{item.videoId}}">
+        <!-- 封面 -->
+        <image class="history-cover" src="{{item.coverUrl}}" mode="aspectFill" />
+        <!-- 信息 -->
+        <view class="history-info">
+          <text class="history-title">{{item.videoTitle}}</text>
+          <view class="history-meta">
+            <text class="meta-score" wx:if="{{item.score > 0}}">{{item.score}}分</text>
+            <text class="meta-episode" wx:if="{{item.episodeNumber > 0}}">第{{item.episodeNumber}}集</text>
+          </view>
+          <!-- 进度条 -->
+          <view class="progress-section">
+            <view class="progress-bar">
+              <view class="progress-fill" style="width: {{Math.min(item.progressPercent, 100)}}%"></view>
+            </view>
+            <text class="progress-text">
+              {{formatProgress(item.progress)}} / {{formatProgress(item.totalDuration)}}
+            </text>
+          </view>
+          <text class="history-time">{{formatTime(item.playTime)}}</text>
+        </view>
+        <!-- 删除按钮 -->
+        <view class="history-remove" bindtap="removeHistory" data-id="{{item.id}}">
+          <text>✕</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{list.length === 0 && loaded}}">
+    <text class="empty-icon">🕐</text>
+    <text class="empty-text">还没有播放记录</text>
+    <text class="empty-hint">去首页看看有什么好片吧</text>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-container" wx:if="{{!loaded}}">
+    <text>加载中...</text>
+  </view>
+</view>

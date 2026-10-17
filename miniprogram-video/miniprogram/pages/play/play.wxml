@@ -1,0 +1,85 @@
+<view class="play-container">
+  <!-- 视频播放器 -->
+  <view class="video-wrapper" wx:if="{{!loading}}">
+    <video
+      id="myVideo"
+      class="video-player"
+      src="{{videoUrl}}"
+      title="{{videoTitle}}"
+      controls="{{true}}"
+      autoplay="{{true}}"
+      show-center-play-btn="{{true}}"
+      show-fullscreen-btn="{{true}}"
+      enable-progress-gesture="{{true}}"
+      object-fit="contain"
+      bindtouchstart="onTouchStart"
+      bindtouchend="onTouchEnd"
+      bindtimeupdate="onTimeUpdate"
+      binderror="onVideoError"
+      bindplay="onPlay"
+      bindpause="onPause"
+      bindready="onReady"
+    />
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-wrapper" wx:if="{{loading}}">
+    <text>正在加载...</text>
+  </view>
+
+  <!-- 视频信息 -->
+  <view class="video-info" wx:if="{{videoTitle && !loading}}">
+    <text class="play-title">{{videoTitle}}</text>
+    <view class="play-meta">
+      <text class="play-count" wx:if="{{playCount}}">{{playCount}} 次播放</text>
+      <!-- 控制按钮 -->
+      <view class="control-btns">
+        <view class="ctrl-btn" bindtap="toggleSourcePanel" wx:if="{{sources.length > 1}}">
+          <text>📡 线路</text>
+        </view>
+        <view class="ctrl-btn" bindtap="toggleSpeedPanel">
+          <text>⚡ {{playSpeed}}x</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 播放源面板 -->
+  <view class="panel-overlay" wx:if="{{showSourcePanel}}" bindtap="closePanels"></view>
+  <view class="panel-bottom" wx:if="{{showSourcePanel}}">
+    <view class="panel-header">
+      <text class="panel-title">选择播放源</text>
+      <text class="panel-close" bindtap="closePanels">✕</text>
+    </view>
+    <scroll-view class="panel-list" scroll-y>
+      <view
+        class="panel-item {{index === currentSourceIndex ? 'panel-item-active' : ''}}"
+        wx:for="{{sources}}" wx:key="id"
+        data-index="{{index}}"
+        bindtap="switchSource"
+      >
+        <text>{{item.sourceName}}</text>
+        <text wx:if="{{index === currentSourceIndex}}" class="panel-check">✓</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 倍速面板 -->
+  <view class="panel-overlay" wx:if="{{showSpeedPanel}}" bindtap="closePanels"></view>
+  <view class="panel-bottom" wx:if="{{showSpeedPanel}}">
+    <view class="panel-header">
+      <text class="panel-title">播放速度</text>
+      <text class="panel-close" bindtap="closePanels">✕</text>
+    </view>
+    <view class="speed-grid">
+      <view
+        class="speed-item {{item === playSpeed ? 'speed-item-active' : ''}}"
+        wx:for="{{speedList}}" wx:key="*this"
+        data-speed="{{item}}"
+        bindtap="switchSpeed"
+      >
+        <text>{{item}}x</text>
+      </view>
+    </view>
+  </view>
+</view>
