@@ -90,4 +90,6 @@ allure serve ./allure-results
 □ 引入 Logging 模块实现日志落盘管理
 □ 接入 GitHub Actions 实现 CI/CD 持续集成 (Push 代码自动跑测试)
 □ 引入企业级通知机制 (如钉钉/飞书机器人通知测试结果)
-<div align="center"> <b>Made with ❤️ by limou</b><br> <i>持续学习，用技术保障质量。</i> </div> ```
+```
+
+<div align="center"> <b>Made with ❤️ by limou</b><br> <i>持续学习，用技术保障质量。</i> </div> 

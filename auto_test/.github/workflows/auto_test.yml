@@ -1,0 +1,49 @@
+name: Auto API Test
+
+on:
+  push:
+    branches: [ "auto_test" ] # 只要你推送到 auto_test 分支，就触发
+  pull_request:
+    branches: [ "auto_test" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest # 使用 GitHub 免费提供的 Linux 服务器
+
+    steps:
+    - name: 1. 拉取代码
+      uses: actions/checkout@v3
+
+    - name: 2. 安装 Python 环境
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: 3. 安装项目依赖
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: 4. 安装 Allure 命令行工具
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y default-jre
+        wget https://github.com/allure-framework/allure2/releases/download/2.24.0/allure-2.24.0.tgz
+        tar -zxvf allure-2.24.0.tgz
+        sudo mv allure-2.24.0 /opt/allure
+        sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+
+    - name: 5. 执行测试用例
+      run: |
+        pytest --env=github --alluredir=./allure-results || true
+        # || true 意思是就算有报错也继续往下走，否则报错就不生成报告了
+
+    - name: 6. 生成 Allure HTML 报告
+      run: |
+        allure generate ./allure-results -o ./allure-report --clean
+
+    - name: 7. 将报告发布到 GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./allure-report

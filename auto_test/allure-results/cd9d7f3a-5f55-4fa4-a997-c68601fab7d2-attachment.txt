@@ -1,0 +1,2 @@
+[32mINFO    [0m AutoTest:test_user.py:52 === 开始测试登录接口，测试数据: {'username': 'user1', 'password': 'password1'} ===
+[32mINFO    [0m AutoTest:user_api.py:21 【发送登录请求】 URL: http://127.0.0.1:8080/api/user/register, 参数: user1,password1
