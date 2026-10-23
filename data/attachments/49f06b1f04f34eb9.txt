@@ -1,0 +1,1 @@
+{'code': 200, 'message': 'success', 'data': {'token': 'eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI3MjQiLCJpYXQiOjE3OTIyMTc0ODgsImV4cCI6MTc5MjgyMjI4OH0.GD2hTnZWh_01Um3kUDOH6K8p8gfHVktD0QZABrWkjKImKfkLfaIjIDNekCHxD25Z', 'userId': 724, 'nickname': 'user2', 'avatarUrl': ''}} 登录结果user2
