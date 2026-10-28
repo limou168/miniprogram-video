@@ -29,7 +29,7 @@ def global_token(request,env_url):
     logger.info(f"========== 开始执行全局登录，当前环境: http://{env_url} ==========")
     session=requests.Session()
     res=session.post(f"http://{env_url}/api/user/login",
-                 json={"username": "user1", "password": "password1"}).json()
+                 json={"username": "admin", "password": "admin"}).json()
 
     if res["code"]==200:  
         token = res["data"]["token"]
@@ -79,7 +79,10 @@ def init_test_data():
         INSERT INTO sys_video (id, title, category_id, cover_url, year) 
         VALUES (1, '自动化测试专用视频', 1, 'http://test.jpg', 2025)
     """
+    
     db.execute(insert_sql)
+    db.execute("INSERT INTO sys_user (username, password )VALUES ('admin','admin') ")
+
     logger.info("✅ 自动化造数完成：已插入测试视频数据")
 
     yield
