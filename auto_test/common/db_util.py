@@ -34,6 +34,18 @@ class DBUtil:
             cursor.execute(sql)
             return cursor.fetchall()
 
+    def execute(self,sql):
+
+        try:
+            with self.conn.cursor() as cursor:
+                row=cursor.execute(sql)
+                self.conn.commit
+
+                return row
+        except Exception as e:
+            self.conn.rollback()
+            logger.error(f"SQL执行失败: {sql}, 报错: {e}")
+            raise e
     def close(self):
         """关闭数据库连接"""
         self.conn.close()

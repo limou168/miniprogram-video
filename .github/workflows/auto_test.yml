@@ -10,6 +10,20 @@ jobs:
   test:
     runs-on: ubuntu-latest # 使用 GitHub 免费提供的 Linux 服务器
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: 123456
+          MYSQL_DATABASE: video_platform
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
     permissions:
       contents: write
 
@@ -36,9 +50,15 @@ jobs:
         sudo mv allure-2.24.0 /opt/allure
         sudo ln -s /opt/allure/bin/allure /usr/bin/allure
 
+    - name: 5. 初始化数据库表结构
+      run: |
+        # 这里把你 Java 项目里的建表 SQL 导入进去（如果你有的话）
+        sudo apt-get install -y mysql-client
+        mysql -h 127.0.0.1 -uroot -p123456 video_platform < init.sql
+
     - name: 5. 执行测试用例
       run: |
-        pytest --env=github --alluredir=./allure-results || true
+        pytest --env=test --alluredir=./allure-results || true
         # || true 意思是就算有报错也继续往下走，否则报错就不生成报告了
 
     - name: 6. 生成 Allure HTML 报告
