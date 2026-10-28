@@ -35,7 +35,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
-        java-version: '17' # 改成你编译 jar 时用的 Java 版本
+        java-version: '21' # 改成你编译 jar 时用的 Java 版本
 
     - name: 3. 初始化数据库表结构
       run: |
