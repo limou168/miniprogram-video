@@ -1,0 +1,4 @@
+INFO     AutoTest:db_util.py:20 数据库连接成功！
+INFO     AutoTest:conftest.py:83 ✅ 自动化造数完成：已插入测试视频数据
+INFO     AutoTest:db_util.py:20 数据库连接成功！
+INFO     AutoTest:test_user.py:28 === 开始测试注册接口，测试数据: {'username': 'name777', 'password': 'pwd123'} ===

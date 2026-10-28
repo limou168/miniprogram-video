@@ -1,0 +1,2 @@
+INFO     AutoTest:test_user.py:52 === 开始测试登录接口，测试数据: {'username': 'user2', 'password': 'password2'} ===
+INFO     AutoTest:db_util.py:52 数据库连接已关闭！

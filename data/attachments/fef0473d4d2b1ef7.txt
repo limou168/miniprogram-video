@@ -1,0 +1,1 @@
+INFO     AutoTest:test_user.py:52 === 开始测试登录接口，测试数据: {'username': 'admin', 'password': 'admin1'} ===

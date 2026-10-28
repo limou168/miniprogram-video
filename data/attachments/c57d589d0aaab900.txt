@@ -1,0 +1,1 @@
+INFO     AutoTest:test_user.py:28 === 开始测试注册接口，测试数据: {'username': 'name396', 'password': 'pwd123'} ===
