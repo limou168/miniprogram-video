@@ -10,7 +10,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    # 启动 MySQL 容器
     services:
       mysql:
         image: mysql:8.0
@@ -32,41 +31,32 @@ jobs:
     - name: 1. 拉取代码
       uses: actions/checkout@v3
 
-    # ---------- 启动 Java 后端所需步骤 ----------
-    - name: 2. 安装 JDK
+    - name: 2. 安装 JDK (只需 JRE 运行环境即可)
       uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
-        java-version: '21' # 改成你 Java 项目实际使用的版本 (如 8, 11, 17, 21)
+        java-version: '17' # 改成你编译 jar 时用的 Java 版本
 
     - name: 3. 初始化数据库表结构
       run: |
         sudo apt-get install -y mysql-client
-        # 导入你导出的表结构（这里假设 init.sql 在根目录）
         mysql -h 127.0.0.1 -uroot -p123456 video_platform < init.sql
 
-    - name: 4. 打包并启动 Java 后端
-      # working-directory 要填你 Java 后端代码所在的目录
-      working-directory: ./video-server 
+    - name: 4. 启动 Java 后端 (直接运行根目录的 jar 包)
       run: |
-        # 使用 Maven 打包 (如果用的是 Gradle，换成 ./gradlew build)
-        mvn clean package -DskipTests
+        # 注意：这里的 jar 包名要和根目录里的完全一致
+        nohup java -jar video-server-1.0.0.jar > backend.log 2>&1 &
         
-        # 后台启动 Spring Boot 应用，并把日志输出到 backend.log
-        # 假设打包出来的 jar 包在 target 目录下
-        nohup java -jar target/*.jar > backend.log 2>&1 &
-        
-        # 循环等待后端启动完成 (检查 8080 端口是否可用)
         echo "等待后端启动..."
         for i in {1..30}; do
-          if curl -s http://127.0.0.1:8080/api/user/hot > /dev/null; then
+          # 替换成你项目里一个不传参的 GET 接口，用于探活
+          if curl -s http://127.0.0.1:8080/api/video/hot > /dev/null; then
             echo "✅ 后端启动成功！"
             break
           fi
           echo "后端还未就绪，等待 2 秒..."
           sleep 2
         done
-    # ----------------------------------------
 
     - name: 5. 安装 Python 环境
       uses: actions/setup-python@v4
@@ -74,7 +64,7 @@ jobs:
         python-version: '3.10'
 
     - name: 6. 安装 Python 项目依赖
-      working-directory: ./auto_test # 进入你的 python 目录
+      working-directory: ./auto_test
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
@@ -88,12 +78,10 @@ jobs:
         sudo mv allure-2.24.0 /opt/allure
         sudo ln -s /opt/allure/bin/allure /usr/bin/allure
 
-    # ---------- 执行测试（不需要跳过啦！） ----------
     - name: 8. 执行测试用例
       working-directory: ./auto_test
       run: |
-        # 注意：不要加 || true，让测试结果决定流水线的成败
-        # 不需要 --env=github，直接用默认配置连 127.0.0.1:8080 和 127.0.0.1:3306
+        # 直接跑，不传 --env=github 跳过，因为现在环境是真的通！
         pytest --alluredir=./allure-results
 
     - name: 9. 生成 Allure HTML 报告
