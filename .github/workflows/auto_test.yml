@@ -58,15 +58,17 @@ jobs:
 
     - name: 5. 执行测试用例
       run: |
+        cd auto_test
         pytest --env=test --alluredir=./allure-results || true
         # || true 意思是就算有报错也继续往下走，否则报错就不生成报告了
 
     - name: 6. 生成 Allure HTML 报告
       run: |
+        cd auto_test
         allure generate ./allure-results -o ./allure-report --clean
 
     - name: 7. 将报告发布到 GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./allure-report
+        publish_dir: ./auto_test/allure-report
