@@ -1,0 +1,3 @@
+INFO     AutoTest:test_user.py:53 === 开始测试登录接口，测试数据: {'username': 'admin', 'password': 'admin1'} ===
+INFO     AutoTest:user_api.py:21 【发送登录请求】 URL: http://127.0.0.1:8080/api/user/login, 参数: admin,admin1
+INFO     AutoTest:db_util.py:52 数据库连接已关闭！

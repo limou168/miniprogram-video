@@ -1,5 +1,0 @@
-INFO     AutoTest:conftest.py:80 ✅ 检测到 GitHub 环境，开始执行自动化造数...
-INFO     AutoTest:db_util.py:20 数据库连接成功！
-INFO     AutoTest:db_util.py:20 数据库连接成功！
-INFO     AutoTest:user_api.py:13 【发送注册请求】 URL: http://127.0.0.1:8080/api/user/register, 参数: admin,admin1
-INFO     AutoTest:conftest.py:95 ✅ 自动化造数完成：已插入测试视频数据
