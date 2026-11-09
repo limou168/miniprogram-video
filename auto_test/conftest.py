@@ -7,7 +7,7 @@ from common.logger import logger
 from common.db_util import DBUtil
 
 def pytest_addoption(parser):
-    parser.addoption("--env",action="store",default="test",help="指定运行环境:dev/test")
+    parser.addoption("--env",action="store",default="test",help="指定运行环境:dev/test/github")
 
 @pytest.fixture(scope="session")
 def env_url(request):
