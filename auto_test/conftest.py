@@ -48,14 +48,7 @@ def user_api(env_url):
     return UserAPI(env_url)
 
 @pytest.fixture(scope='class')
-def db_conn(request):
-
-    env = request.config.getoption("--env")
-
-    # 如果是 GitHub Actions 环境，直接跳过这个 fixture
-    if env == "github":
-        pytest.skip("GitHub Actions 环境无法连接本地数据库，跳过该用例")
-        logger.error("环境无法连接本地数据库，跳过该用例")
+def db_conn():
 
     print("=== 开启数据库连接 (Setup) ===")
     db=DBUtil()
