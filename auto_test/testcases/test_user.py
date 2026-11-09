@@ -48,27 +48,10 @@ class TestUser:
     @allure.story("登录接口")
     @allure.title("测试正常用户登录")
     @pytest.mark.parametrize("user", user_data["login_users"])
-    @pytest.mark.parametrize("user2", register_random)
-    def test_login(self,user,user_api,user2,request):
-         
-        env = request.config.getoption("--env")
-
-        if env != "github":
-        
+    def test_login(self,user,user_api):
             with allure.step(f"发送登录请求，用户: {user['username']}"):
                 logger.info(f"=== 开始测试登录接口，测试数据: {user} ===") 
                 res=user_api.login(user["username"],user["password"])
-                # global_token(user["username"],user["password"])
-                
-            with allure.step("断言结果"):
-                assert res["code"]==200 
-                assert res["message"] == "success"
-                assert res["data"]["token"] !=None 
-
-        else:
-            with allure.step(f"发送登录请求，用户: {user2['username']}"):
-                logger.info(f"=== 开始测试登录接口，测试数据: {user} ===") 
-                res=user_api.login(user2["username"],user2["password"])
                 # global_token(user["username"],user["password"])
                 
             with allure.step("断言结果"):
