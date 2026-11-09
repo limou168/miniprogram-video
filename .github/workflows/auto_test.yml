@@ -81,8 +81,8 @@ jobs:
     - name: 8. 执行测试用例
       working-directory: ./auto_test
       run: |
-        # 直接跑，不传 --env=github 跳过，因为现在环境是真的通！
-        pytest --alluredir=./allure-results
+       
+        pytest  --env=github --alluredir=./allure-results
 
     - name: 9. 生成 Allure HTML 报告
       working-directory: ./auto_test

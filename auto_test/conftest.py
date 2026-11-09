@@ -20,16 +20,12 @@ def env_url(request):
         return "127.0.0.1:8080"
     
 @pytest.fixture(scope="session")
-def global_token(request,env_url):
-
-    env = request.config.getoption("--env")
-    if env == "github":
-        pytest.skip("GitHub Actions 环境无本地后端服务，跳过依赖登录的用例")
+def global_token(env_url):
 
     logger.info(f"========== 开始执行全局登录，当前环境: http://{env_url} ==========")
     session=requests.Session()
     res=session.post(f"http://{env_url}/api/user/login",
-                 json={"username": "admin", "password": "admin"}).json()
+                 json={"username": "admin", "password": "admin1"}).json()
 
     if res["code"]==200:  
         token = res["data"]["token"]
@@ -70,18 +66,31 @@ def db_conn(request):
     db.close()
 
 @pytest.fixture(scope="session", autouse=True)
-def init_test_data():
+def init_test_data(request,env_url):
+
+
+    env = request.config.getoption("--env")
+    
+    # 2. 如果不是 github 环境，直接放行，不执行造数逻辑
+    if env != "github":
+        logger.info(f"当前环境为 {env}，跳过云端全局造数。")
+        yield
+        return
+
+    logger.info("✅ 检测到 GitHub 环境，开始执行自动化造数...")
+    db = DBUtil()
     db=DBUtil()
 
     db.execute("DELETE FROM sys_video WHERE id = 1")
-
+    db.execute("DELETE FROM sys_user WHERE username = 'admin'")
     insert_sql = """
         INSERT INTO sys_video (id, title, category_id, cover_url, year) 
         VALUES (1, '自动化测试专用视频', 1, 'http://test.jpg', 2025)
     """
     
     db.execute(insert_sql)
-    db.execute("INSERT INTO sys_user (username, password )VALUES ('admin','admin') ")
+    api = UserAPI(url=env_url)
+    api.register("admin", "admin1") 
 
     logger.info("✅ 自动化造数完成：已插入测试视频数据")
 
