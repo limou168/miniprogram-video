@@ -18,5 +18,5 @@ class UserAPI:
         response = self.session.post(f"http://{self.url}/api/user/login", json={"username": username, "password": password})
 
 
-        logger.info(f"【发送登录请求】 URL: http://{self.url}/api/user/register, 参数: {username},{password}")
+        logger.info(f"【发送登录请求】 URL: http://{self.url}/api/user/login, 参数: {username},{password}")
         return response.json()
