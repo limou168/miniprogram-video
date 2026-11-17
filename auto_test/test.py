@@ -1,6 +1,7 @@
 import pytest
 import requests
 import allure
+from common.logger import logger
 
 
 
@@ -16,9 +17,9 @@ class User:
 class TestUser:
     url="http://127.0.0.1:8080"
     USERS = [
-        User("admin", "admin1"),
-        User("user1", "password1"),
-        User("user2", "password2"),
+        User("a11", "admin1"),
+        User("u11", "password1"),
+        User("u11", "password2"),
     ]
 
     text=["/api/user","/api/video","/api/video/1","/api/video/1/comment","/api/video/1/comment/1"]
@@ -32,6 +33,7 @@ class TestUser:
             res=requests.post(self.url+self.text[0]+"/register",json={"username":user.name,"password":user.password})
             response=res.json()
             print(response)
+            logger.info(f"结果:{response} 注册结果")
 
         with allure.step("断言注册结果"):
             assert response["code"]==200
@@ -46,6 +48,7 @@ class TestUser:
             res=requests.post(self.url+self.text[0]+"/login",json={"username":user.name,"password":user.password})
             response=res.json()
             print(response,"登录结果"+user.name)
+            logger.info(f"结果:{response} 登录结果")
         with allure.step("断言登录结果"):
             assert response["code"]==200
             assert response["message"]=="success"

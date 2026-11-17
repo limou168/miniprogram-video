@@ -1,7 +1,7 @@
 class Config:
     URL="127.0.0.1:8080"
 
-
+    SECRET_KEY="我是你爸爸"
 
     DB_HOST = "127.0.0.1"
     DB_PORT = 3306

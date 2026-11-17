@@ -5,6 +5,8 @@ from api.video_api import VideoApi
 from api.user_api import UserAPI
 from common.logger import logger
 from common.db_util import DBUtil
+import hashlib
+import time
 
 def pytest_addoption(parser):
     parser.addoption("--env",action="store",default="test",help="指定运行环境:dev/test/github")
@@ -29,9 +31,20 @@ def global_token(env_url):
 
     if res["code"]==200:  
         token = res["data"]["token"]
+        timeone=str(int(time.time()))
+        sgin="admin"+timeone+Config.SECRET_KEY
+        md5_obj = hashlib.md5(sgin.encode()).hexdigest()
+
         # 统一把 Token 塞进 Session 的请求头里
         session.headers.update({"Authorization": f"Bearer {token}"})
-        logger.info("全局登录成功，已获取 Token")
+        session.headers.update({"timestamp":timeone})
+        session.headers.update({"sign":md5_obj})
+
+        logger.info("全局登录成功，已获取 Token和散列值，并注入到 Session 请求头中。sign值为: "+md5_obj)
+        logger.info("Authorization  "+str(session.headers.get("Authorization")))
+        logger.info("timestamp  "+str(session.headers.get("timestamp")))
+        logger.info("sign  "+str(session.headers.get("sign")))
+
         return session
     else:
         logger.error(f"全局登录失败！返回结果: {res}")
@@ -40,11 +53,11 @@ def global_token(env_url):
 @pytest.fixture(scope="session")
 def video_api(env_url,global_token):
     """返回一个自带 Token 的视频 API 实例"""
-    return VideoApi(env_url,session=global_token)
+    return VideoApi(env_url,global_token)
 
 @pytest.fixture(scope="session")
 def user_api(env_url):
-    """返回一个自带 Token 的视频 API 实例"""
+
     return UserAPI(env_url)
 
 @pytest.fixture(scope='class')

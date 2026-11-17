@@ -11,6 +11,7 @@ class TestVideo:
         res=video_api.getlist()
         with allure.step("断言结果"):
             assert res["code"]==200
+            assert res["message"]=="success"
             assert "data" in res
             # logger.info(f"获取视频接口获取成功,数据返回：{res}")
 
@@ -21,6 +22,8 @@ class TestVideo:
         # logger.info(f"对应id视频接口获取成功,数据返回：{res}")
         with allure.step("断言结果"):
             assert res["data"]["title"] =="自动化测试专用视频"
+            assert res["message"]=="success"
+
 
     @allure.story("获取热门视频接口")
     @allure.title("测试正常获取")
@@ -29,6 +32,8 @@ class TestVideo:
         # logger.info(f"获取热门视频接口获取成功,数据返回：{res}")
         with allure.step("断言结果"):
             assert "data" in res
+            assert res["message"]=="success"
+
 
     @allure.story("获取搜索视频接口")
     @allure.title("测试正常获取")
@@ -37,6 +42,8 @@ class TestVideo:
         # logger.info(f"搜索视频接口获取成功,数据返回：{res}")
         with allure.step("断言结果"):
             assert "data" in res
+            assert res["message"]=="success"
+
 
     @allure.story("获取搜索窗口推荐文字接口")
     @allure.title("测试正常获取")
@@ -45,6 +52,8 @@ class TestVideo:
         # logger.info(f"获取搜索窗口推荐文字接口获取成功,数据返回：{res}")
         with allure.step("断言结果"):
             assert "data" in res
+            assert res["message"]=="success"
+
 
     @allure.story("获取视频对应集数接口")
     @allure.title("测试正常获取")
@@ -53,6 +62,8 @@ class TestVideo:
         # logger.info(f"获取视频对应集数接口成功,数据返回：{res}")
         with allure.step("断言结果"):
             assert "data" in res
+            assert res["message"]=="success"
+
             
     @allure.story("获取分类接口")
     @allure.title("测试正常获取")
@@ -61,3 +72,5 @@ class TestVideo:
         # logger.info(f"获取分类接口获取成功,数据返回：{res}")
         with allure.step("断言结果"):
             assert "data" in res
+            assert res["message"]=="success"
+
