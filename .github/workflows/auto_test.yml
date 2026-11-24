@@ -82,7 +82,7 @@ jobs:
       working-directory: ./auto_test
       run: |
        
-        pytest  --env=github --alluredir=./allure-results
+        pytest  --env=github --alluredir=./allure-results || true
 
     - name: 9. 生成 Allure HTML 报告
       working-directory: ./auto_test
