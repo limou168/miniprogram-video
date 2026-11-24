@@ -1,0 +1,2 @@
+INFO     AutoTest:test_user.py:67 === 开始测试登录接口，测试数据: 错误用户名 ===
+INFO     AutoTest:user_api.py:21 【发送登录请求】 URL: http://127.0.0.1:8080/api/user/login, 参数: wronguser,wrongpassword

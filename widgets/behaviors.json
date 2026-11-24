@@ -1,1 +1,1 @@
-{"total":1,"items":[{"uid":"0e437db2d1b5ca5bd36ede978089aacb","name":"小程序视频接口测试","statistic":{"failed":0,"broken":0,"skipped":0,"passed":2,"unknown":0,"total":2}}]}
+{"total":2,"items":[{"uid":"13e7ecff0c8b7b4a6a576f3bf3ef2675","name":"鉴权签名校验","statistic":{"failed":0,"broken":0,"skipped":0,"passed":5,"unknown":0,"total":5}},{"uid":"0e437db2d1b5ca5bd36ede978089aacb","name":"小程序视频接口测试","statistic":{"failed":0,"broken":0,"skipped":0,"passed":2,"unknown":0,"total":2}}]}

@@ -1,0 +1,2 @@
+INFO     AutoTest:test_user.py:78 === 开始测试注册接口，测试数据: 已存在用户名 ===
+INFO     AutoTest:user_api.py:13 【发送注册请求】 URL: http://127.0.0.1:8080/api/user/register, 参数: admin,admin1

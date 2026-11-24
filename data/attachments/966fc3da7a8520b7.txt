@@ -1,5 +1,0 @@
-INFO     AutoTest:conftest.py:27 ========== 开始执行全局登录，当前环境: http://127.0.0.1:8080 ==========
-INFO     AutoTest:conftest.py:43 全局登录成功，已获取 Token和散列值，并注入到 Session 请求头中。sign值为: 49ff9abccd0e2373ec89cc4833d8e4e9
-INFO     AutoTest:conftest.py:44 Authorization  Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI4MTgiLCJpYXQiOjE3OTQ5MDQxMzcsImV4cCI6MTc5NTUwODkzN30.9YcgNnycD8i0eQvn2wl17ieMaiStAeff9ik3kFNkTydEImzaw7EY7csgkqFr9ONW
-INFO     AutoTest:conftest.py:45 timestamp  1794904137
-INFO     AutoTest:conftest.py:46 sign  49ff9abccd0e2373ec89cc4833d8e4e9

@@ -1,0 +1,1 @@
+INFO     AutoTest:video_api.py:44 【发送GET请求】 URL: http://127.0.0.1:8080/api/video/list
