@@ -7,6 +7,7 @@ from common.logger import logger
 from common.db_util import DBUtil
 import hashlib
 import time
+from common.sgin import build_auth_header
 
 def pytest_addoption(parser):
     parser.addoption("--env",action="store",default="test",help="指定运行环境:dev/test/github")
@@ -32,18 +33,15 @@ def global_token(env_url):
     if res["code"]==200:  
         token = res["data"]["token"]
         timeone=str(int(time.time()))
-        sgin="admin"+timeone+Config.SECRET_KEY
-        md5_obj = hashlib.md5(sgin.encode()).hexdigest()
-
+      
         # 统一把 Token 塞进 Session 的请求头里
-        session.headers.update({"Authorization": f"Bearer {token}"})
-        session.headers.update({"timestamp":timeone})
-        session.headers.update({"sign":md5_obj})
+        auth_headers = build_auth_header(token, "admin", Config.SECRET_KEY)
+        session.headers.update(auth_headers)
 
-        logger.info("全局登录成功，已获取 Token和散列值，并注入到 Session 请求头中。sign值为: "+md5_obj)
-        logger.info("Authorization  "+str(session.headers.get("Authorization")))
-        logger.info("timestamp  "+str(session.headers.get("timestamp")))
-        logger.info("sign  "+str(session.headers.get("sign")))
+        logger.info(f"全局登录成功，已获取 Token 和散列值，并注入到 Session 请求头中。sign值为: {auth_headers['sign']}")
+        logger.info(f"Authorization  {session.headers.get('Authorization')}")
+        logger.info(f"timestamp  {session.headers.get('timestamp')}")
+        logger.info(f"sign  {session.headers.get('sign')}")
 
         return session
     else:
@@ -101,4 +99,4 @@ def init_test_data(request,env_url):
     logger.info("✅ 自动化造数完成：已插入测试视频数据")
 
     yield
-    db.close
+    db.close()

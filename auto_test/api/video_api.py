@@ -1,5 +1,6 @@
 import requests
 from config.setting import Config
+from common.logger import logger
 
 class VideoApi:
     def __init__(self,url,session=None):
@@ -37,3 +38,8 @@ class VideoApi:
         params ={"categoryId":categoryId}
         response = self.session.get(f"http://{self.url}/api/video/tags",params=params)
         return response.json()
+
+    def get_raw(self,path:str):
+        response = self.session.get(f"http://{self.url}{path}")
+        logger.info(f"【发送GET请求】 URL: http://{self.url}{path}")
+        return response
