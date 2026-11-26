@@ -39,18 +39,25 @@ markdown
 ```text
 auto_test/
  ├── api/                    # 【接口封装层】隔离底层 HTTP 实现，只暴露业务方法
- │    └── user_api.py        
+ │    └── user_api.py
+ |    └── video_api.py
  ├── config/                 # 【配置层】管理全局变量、环境地址等
  │    └── setting.py         
  ├── data/                   # 【数据层】测试数据与代码分离
  │    └── users.yaml         
  ├── testcases/              # 【测试用例层】纯业务断言与测试逻辑
- │    └── test_user.py       
- ├── common/                 # 【公共工具层】如读取 YAML、加解密工具等
- │    └── util.py            
+ │    └── test_user.py
+ │    └── test_sgin.py
+ │    └── test_video.py     
+ ├── common/                 # 【公共工具层】如读取 YAML、加解密、数据库工具等
+ │    └── util.py
+ │    └── db_util.py
+ │    └── logger.py
+ │    └── sgin.py             
  ├── conftest.py             # Pytest 全局配置 / 预置 Fixture (如 Token 管理)
  ├── pytest.ini              # 框架全局配置文件
- └── requirements.txt        # 项目依赖清单
+ ├──requirements.txt        # 项目依赖清单
+ └── logs
 ✨ 框架核心亮点
 1. 分层架构设计 (分层解耦)
 API 层 (api/)：对 requests 进行二次封装，处理 URL 拼接、公共请求头等。若接口字段发生变更，仅需修改 API 层，完美实现“对修改关闭，对扩展开放”。
@@ -86,10 +93,10 @@ allure serve ./allure-results
 ☑ 基础 Requests 封装与用例编写
 ☑ 引入 YAML 数据驱动
 ☑ 接入 Allure 测试报告体系
-□ 引入 conftest.py 实现全局 Token 自动获取与注入
-□ 引入 Logging 模块实现日志落盘管理
-□ 接入 GitHub Actions 实现 CI/CD 持续集成 (Push 代码自动跑测试)
-□ 引入企业级通知机制 (如钉钉/飞书机器人通知测试结果)
+☑ 引入 conftest.py 实现全局 Token 自动获取与注入
+☑ 引入 Logging 模块实现日志落盘管理
+☑ 增加鉴权测试
+☑ 接入 GitHub Actions 实现 CI/CD 持续集成 (Push 代码自动跑测试)
 ```
 
 <div align="center"> <b>Made with ❤️ by limou</b><br> <i>持续学习，用技术保障质量。</i> </div> 
