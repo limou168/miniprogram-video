@@ -80,9 +80,10 @@ jobs:
 
     - name: 8. 执行测试用例
       working-directory: ./auto_test
+      continue-on-error: true 
       run: |
        
-        pytest  --env=github --alluredir=./allure-results || true
+        pytest  --env=github --alluredir=./allure-results
 
     - name: 9. 生成 Allure HTML 报告
       working-directory: ./auto_test
