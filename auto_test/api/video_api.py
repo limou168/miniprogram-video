@@ -7,9 +7,15 @@ class VideoApi:
         self.url = url
         self.session= session if session else requests.Session()
 
-    def getlist(self):
-        response = self.session.get(f"http://{self.url}/api/video/list")
-        return response.json()
+    def getlist(self,page=None,size=None):
+
+        if page is not None and size is not None:
+            params = {"page": page, "size": size}
+            response = self.session.get(f"http://{self.url}/api/video/list",params=params)
+            return response.json()
+        else:
+            response = self.session.get(f"http://{self.url}/api/video/list")
+            return response.json()
 
     def getListById(self, video_id):
         response = self.session.get(f"http://{self.url}/api/video/{video_id}")

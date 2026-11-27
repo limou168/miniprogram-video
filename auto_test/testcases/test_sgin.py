@@ -9,7 +9,7 @@ SECRET = Config.SECRET_KEY
 USER = "admin"
 
 
-def make_api(env_url, token, extra_headers=None, remove_headers=None, ts=None, sign=None):
+def make_api(env_url, token=None, extra_headers=None, remove_headers=None, ts=None, sign=None):
     """构造一个只带指定鉴权头的独立 session，避免污染全局 session"""
     s = requests.Session()
     headers = build_auth_header(token, USER, SECRET, timestamp=ts)
@@ -70,3 +70,9 @@ class TestSign:
     def test_valid_sign_passed(self, env_url, token):
         api = make_api(env_url, token)
         assert api.get_raw("/api/video/list").status_code == 200
+
+        
+    @allure.story("无token")
+    def test_valid_sign_passed(self, env_url):
+        api = make_api(env_url)
+        assert api.get_raw("/api/video/list").status_code == 401

@@ -39,7 +39,7 @@ class DBUtil:
         try:
             with self.conn.cursor() as cursor:
                 row=cursor.execute(sql)
-                self.conn.commit
+                self.conn.commit()
 
                 return row
         except Exception as e:

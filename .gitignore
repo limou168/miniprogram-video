@@ -4,3 +4,4 @@ __pycache__/
 *.class
 auto_test/allure-results/
 *.log
+logs/

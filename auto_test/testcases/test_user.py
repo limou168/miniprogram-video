@@ -85,14 +85,8 @@ class TestUser:
     @allure.story("注册接口")
     @allure.title("测试注册空用户名情况")
     def test_register_empty(self,user_api):
-
-
-        ##bug
-
-
-        with allure.step(f"发送注册请求，用户: 空用户名"):
-         
-            res=user_api.register("","123111")
+        with allure.step(f"发送注册请求，用户: 空用户名"):     
+            res=user_api.register(None,"123111")
             logger.info(f"=== 开始测试注册接口，测试数据: 空用户名 ===  {res}") 
         with allure.step("断言结果"):
             assert res["code"]==400 

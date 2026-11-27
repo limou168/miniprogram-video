@@ -3,6 +3,10 @@ import requests
 from config.setting import Config
 from api.video_api import VideoApi
 from api.user_api import UserAPI
+from api.favorite_api import FavoriteAPI
+
+from api.upload_api import UploadAPI
+
 from common.logger import logger
 from common.db_util import DBUtil
 import hashlib
@@ -54,9 +58,20 @@ def video_api(env_url,global_token):
     return VideoApi(env_url,global_token)
 
 @pytest.fixture(scope="session")
+def favorite_api(env_url,global_token):
+    return FavoriteAPI(env_url,global_token)
+
+@pytest.fixture(scope="session")
 def user_api(env_url):
 
     return UserAPI(env_url)
+
+
+@pytest.fixture(scope="session")
+def upload_api(env_url,global_token):
+
+    return UploadAPI(env_url,global_token)
+
 
 @pytest.fixture(scope='class')
 def db_conn():
