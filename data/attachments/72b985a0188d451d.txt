@@ -1,0 +1,1 @@
+INFO     AutoTest:test_upload.py:12 三方服务依赖测试,本地服务未配置

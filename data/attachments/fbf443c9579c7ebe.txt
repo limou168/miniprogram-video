@@ -1,0 +1,1 @@
+INFO     AutoTest:test_favorite.py:24 返回数据{'code': 500, 'message': '服务器内部错误', 'data': None}

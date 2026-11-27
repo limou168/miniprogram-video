@@ -1,0 +1,3 @@
+INFO     AutoTest:test_user.py:129 === 开始测试注册接口，测试数据: 短用户名 ===
+INFO     AutoTest:user_api.py:14 【发送注册请求】 URL: http://127.0.0.1:8080/api/user/register, 参数: ab,password123
+INFO     AutoTest:db_util.py:52 数据库连接已关闭！
