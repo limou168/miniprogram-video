@@ -1,0 +1,5 @@
+INFO     AutoTest:test_user.py:29 === 开始测试注册接口，测试数据: {'username': 'name833', 'password': 'pwd123'} ===
+INFO     AutoTest:user_api.py:14 【发送注册请求】 URL: http://127.0.0.1:8080/api/user/register, 参数: name833,pwd123
+INFO     AutoTest:test_user.py:38 数据库连接配置: <pymysql.connections.Connection object at 0x75166f2f2230>
+INFO     AutoTest:test_user.py:40 ====== 真实执行的 SQL 语句: select * from sys_user where username='name833'
+INFO     AutoTest:test_user.py:44 ======数据库获取到的注册信息{'id': 823, 'username': 'name833', 'password': '$2a$10$JiFTlw.B/eT.wBFVbxfaFuRDx1pv6hD4nwXsHQ83CmbOsXLwAszi.', 'nickname': 'name833', 'avatar_url': '', 'phone': '', 'status': 1, 'create_time': None, 'update_time': None}

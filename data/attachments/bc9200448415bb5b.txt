@@ -1,5 +1,0 @@
-INFO     AutoTest:db_util.py:20 数据库连接成功！
-INFO     AutoTest:user_api.py:14 【发送注册请求】 URL: http://127.0.0.1:8080/api/user/register, 参数: test1,paw123456
-INFO     AutoTest:user_api.py:22 【发送登录请求】 URL: http://127.0.0.1:8080/api/user/login, 参数: test1,paw123456
-INFO     AutoTest:test_businessflow.py:73 修改用户信息{'code': 200, 'message': 'success', 'data': None}
-INFO     AutoTest:db_util.py:52 数据库连接已关闭！
