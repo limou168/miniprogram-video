@@ -1872,3 +1872,73 @@
 2026-11-27 16:44:56,825 - [test_user.py:135] - INFO - === 开始测试注册接口，测试数据: 短用户名 ===
 2026-11-27 16:44:56,827 - [user_api.py:14] - INFO - 【发送注册请求】 URL: http://127.0.0.1:8080/api/user/register, 参数: ab,password123
 2026-11-27 16:44:56,828 - [db_util.py:52] - INFO - 数据库连接已关闭！
+2026-11-27 17:17:33,019 - [conftest.py:95] - INFO - 当前环境为 test，跳过云端全局造数。
+2026-11-27 17:17:33,020 - [conftest.py:32] - INFO - ========== 开始执行全局登录，当前环境: http://127.0.0.1:8080 ==========
+2026-11-27 17:17:33,095 - [conftest.py:45] - INFO - 全局登录成功，已获取 Token 和散列值，并注入到 Session 请求头中。sign值为: d86d454187c9844cada45d69c5b51689
+2026-11-27 17:17:33,095 - [conftest.py:46] - INFO - Authorization  Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI4NDQiLCJpYXQiOjE3OTU3NzEwNTMsImV4cCI6MTc5NjM3NTg1M30.V27BQB4yCKHtyXqKIMNGFczfDlPSg7aRMsx_M_4AUzGAZPruMdV4mIlJw61LoMvf
+2026-11-27 17:17:33,096 - [conftest.py:47] - INFO - timestamp  1795771053
+2026-11-27 17:17:33,096 - [conftest.py:48] - INFO - sign  d86d454187c9844cada45d69c5b51689
+2026-11-27 17:17:33,097 - [test_businessflow.py:15] - INFO - 已登录，准备开始收藏流程
+2026-11-27 17:17:33,129 - [test_businessflow.py:46] - INFO - 收藏全流程测试通过
+2026-11-27 17:17:33,243 - [db_util.py:20] - INFO - 数据库连接成功！
+2026-11-27 17:17:33,315 - [user_api.py:14] - INFO - 【发送注册请求】 URL: http://127.0.0.1:8080/api/user/register, 参数: test1,paw123456
+2026-11-27 17:17:33,379 - [user_api.py:22] - INFO - 【发送登录请求】 URL: http://127.0.0.1:8080/api/user/login, 参数: test1,paw123456
+2026-11-27 17:17:33,390 - [test_businessflow.py:74] - INFO - 修改用户信息{'code': 200, 'message': 'success', 'data': None}
+2026-11-27 17:17:33,402 - [db_util.py:52] - INFO - 数据库连接已关闭！
+2026-11-27 17:17:33,414 - [test_favorite.py:14] - INFO - 返回数据{'code': 200, 'message': 'success', 'data': True}
+2026-11-27 17:17:33,422 - [test_favorite.py:24] - INFO - 返回数据{'code': 500, 'message': '服务器内部错误', 'data': None}
+2026-11-27 17:17:33,430 - [test_favorite.py:33] - INFO - 返回数据{'code': 200, 'message': 'success', 'data': True}
+2026-11-27 17:17:33,436 - [test_favorite.py:44] - INFO - 返回数据{'code': 200, 'message': 'success', 'data': False}
+2026-11-27 17:17:33,449 - [video_api.py:50] - INFO - 【发送GET请求】 URL: http://127.0.0.1:8080/api/video/list
+2026-11-27 17:17:33,457 - [video_api.py:50] - INFO - 【发送GET请求】 URL: http://127.0.0.1:8080/api/video/list
+2026-11-27 17:17:33,467 - [video_api.py:50] - INFO - 【发送GET请求】 URL: http://127.0.0.1:8080/api/video/list
+2026-11-27 17:17:33,476 - [video_api.py:50] - INFO - 【发送GET请求】 URL: http://127.0.0.1:8080/api/video/list
+2026-11-27 17:17:33,486 - [video_api.py:50] - INFO - 【发送GET请求】 URL: http://127.0.0.1:8080/api/video/list
+2026-11-27 17:17:33,497 - [video_api.py:50] - INFO - 【发送GET请求】 URL: http://127.0.0.1:8080/api/video/list
+2026-11-27 17:17:33,507 - [video_api.py:50] - INFO - 【发送GET请求】 URL: http://127.0.0.1:8080/api/video/list
+2026-11-27 17:17:33,516 - [video_api.py:50] - INFO - 【发送GET请求】 URL: http://127.0.0.1:8080/api/video/list
+2026-11-27 17:17:33,525 - [video_api.py:50] - INFO - 【发送GET请求】 URL: http://127.0.0.1:8080/api/video/list
+2026-11-27 17:17:33,530 - [video_api.py:50] - INFO - 【发送GET请求】 URL: http://127.0.0.1:8080/api/video/list
+2026-11-27 17:17:33,554 - [test_upload.py:12] - INFO - 三方服务依赖测试,本地服务未配置
+2026-11-27 17:17:33,629 - [db_util.py:20] - INFO - 数据库连接成功！
+2026-11-27 17:17:33,630 - [test_user.py:29] - INFO - === 开始测试注册接口，测试数据: {'username': 'name347', 'password': 'pwd123'} ===
+2026-11-27 17:17:33,701 - [user_api.py:14] - INFO - 【发送注册请求】 URL: http://127.0.0.1:8080/api/user/register, 参数: name347,pwd123
+2026-11-27 17:17:33,702 - [test_user.py:38] - INFO - 数据库连接配置: <pymysql.connections.Connection object at 0x00000241F502AF90>
+2026-11-27 17:17:33,702 - [test_user.py:40] - INFO - ====== 真实执行的 SQL 语句: select * from sys_user where username='name347'
+2026-11-27 17:17:34,203 - [test_user.py:44] - INFO - ======数据库获取到的注册信息{'id': 1270, 'username': 'name347', 'password': '$2a$10$QsKcTRQvjgNHpbutzyYjBezc7SkelcE9aBC8vIzFqNQVmuKVlHgx2', 'nickname': 'name347', 'avatar_url': '', 'phone': '', 'status': 1, 'create_time': None, 'update_time': None}
+2026-11-27 17:17:34,210 - [test_user.py:29] - INFO - === 开始测试注册接口，测试数据: {'username': 'name507', 'password': 'pwd123'} ===
+2026-11-27 17:17:34,284 - [user_api.py:14] - INFO - 【发送注册请求】 URL: http://127.0.0.1:8080/api/user/register, 参数: name507,pwd123
+2026-11-27 17:17:34,284 - [test_user.py:38] - INFO - 数据库连接配置: <pymysql.connections.Connection object at 0x00000241F502AF90>
+2026-11-27 17:17:34,284 - [test_user.py:40] - INFO - ====== 真实执行的 SQL 语句: select * from sys_user where username='name507'
+2026-11-27 17:17:34,785 - [test_user.py:44] - INFO - ======数据库获取到的注册信息{'id': 1271, 'username': 'name507', 'password': '$2a$10$BrhZwICD0Y/OComtXc1GKuTBQbhrHCv7A5YUAPWRBq88ABnaN2hWW', 'nickname': 'name507', 'avatar_url': '', 'phone': '', 'status': 1, 'create_time': None, 'update_time': None}
+2026-11-27 17:17:34,790 - [test_user.py:29] - INFO - === 开始测试注册接口，测试数据: {'username': 'name309', 'password': 'pwd123'} ===
+2026-11-27 17:17:34,859 - [user_api.py:14] - INFO - 【发送注册请求】 URL: http://127.0.0.1:8080/api/user/register, 参数: name309,pwd123
+2026-11-27 17:17:34,859 - [test_user.py:38] - INFO - 数据库连接配置: <pymysql.connections.Connection object at 0x00000241F502AF90>
+2026-11-27 17:17:34,860 - [test_user.py:40] - INFO - ====== 真实执行的 SQL 语句: select * from sys_user where username='name309'
+2026-11-27 17:17:35,361 - [test_user.py:44] - INFO - ======数据库获取到的注册信息{'id': 1272, 'username': 'name309', 'password': '$2a$10$3WY1/EwgYpxVQBIjtl/TR.k9lsYrowEC7s5XcLcGhGiE1bFCf72W6', 'nickname': 'name309', 'avatar_url': '', 'phone': '', 'status': 1, 'create_time': None, 'update_time': None}
+2026-11-27 17:17:35,365 - [test_user.py:29] - INFO - === 开始测试注册接口，测试数据: {'username': 'name879', 'password': 'pwd123'} ===
+2026-11-27 17:17:35,434 - [user_api.py:14] - INFO - 【发送注册请求】 URL: http://127.0.0.1:8080/api/user/register, 参数: name879,pwd123
+2026-11-27 17:17:35,435 - [test_user.py:38] - INFO - 数据库连接配置: <pymysql.connections.Connection object at 0x00000241F502AF90>
+2026-11-27 17:17:35,435 - [test_user.py:40] - INFO - ====== 真实执行的 SQL 语句: select * from sys_user where username='name879'
+2026-11-27 17:17:35,936 - [test_user.py:44] - INFO - ======数据库获取到的注册信息{'id': 1273, 'username': 'name879', 'password': '$2a$10$jTJrHyPcOfb2qHCqxFJlqO2bp5AvE/saf6vxnd.QnjPPV7iRy/As6', 'nickname': 'name879', 'avatar_url': '', 'phone': '', 'status': 1, 'create_time': None, 'update_time': None}
+2026-11-27 17:17:35,943 - [test_user.py:29] - INFO - === 开始测试注册接口，测试数据: {'username': 'name993', 'password': 'pwd123'} ===
+2026-11-27 17:17:36,013 - [user_api.py:14] - INFO - 【发送注册请求】 URL: http://127.0.0.1:8080/api/user/register, 参数: name993,pwd123
+2026-11-27 17:17:36,013 - [test_user.py:38] - INFO - 数据库连接配置: <pymysql.connections.Connection object at 0x00000241F502AF90>
+2026-11-27 17:17:36,014 - [test_user.py:40] - INFO - ====== 真实执行的 SQL 语句: select * from sys_user where username='name993'
+2026-11-27 17:17:36,515 - [test_user.py:44] - INFO - ======数据库获取到的注册信息{'id': 1274, 'username': 'name993', 'password': '$2a$10$6JugI5IKOopg34SLQJejVerVtQflSvnbno4PhTzZEaZDDonWwEvHO', 'nickname': 'name993', 'avatar_url': '', 'phone': '', 'status': 1, 'create_time': None, 'update_time': None}
+2026-11-27 17:17:36,519 - [test_user.py:53] - INFO - === 开始测试登录接口，测试数据: {'username': 'admin', 'password': 'admin1'} ===
+2026-11-27 17:17:36,587 - [user_api.py:22] - INFO - 【发送登录请求】 URL: http://127.0.0.1:8080/api/user/login, 参数: admin,admin1
+2026-11-27 17:17:36,591 - [test_user.py:67] - INFO - === 开始测试登录接口，测试数据: 错误用户名 ===
+2026-11-27 17:17:36,594 - [user_api.py:22] - INFO - 【发送登录请求】 URL: http://127.0.0.1:8080/api/user/login, 参数: wronguser,wrongpassword
+2026-11-27 17:17:36,598 - [test_user.py:78] - INFO - === 开始测试注册接口，测试数据: 已存在用户名 ===
+2026-11-27 17:17:36,601 - [user_api.py:14] - INFO - 【发送注册请求】 URL: http://127.0.0.1:8080/api/user/register, 参数: admin,admin1
+2026-11-27 17:17:36,608 - [user_api.py:14] - INFO - 【发送注册请求】 URL: http://127.0.0.1:8080/api/user/register, 参数: None,123111
+2026-11-27 17:17:36,609 - [test_user.py:90] - INFO - === 开始测试注册接口，测试数据: 空用户名 ===  {'code': 400, 'message': '用户名不能为空', 'data': None}
+2026-11-27 17:17:36,609 - [test_user.py:93] - INFO - 这是一个BUG
+2026-11-27 17:17:36,614 - [test_user.py:101] - INFO - === 开始测试登录接口，测试数据: 空密码 ===
+2026-11-27 17:17:36,617 - [user_api.py:22] - INFO - 【发送登录请求】 URL: http://127.0.0.1:8080/api/user/login, 参数: admin,
+2026-11-27 17:17:36,620 - [test_user.py:115] - INFO - === 开始测试注册接口，测试数据: 超长用户名 ===
+2026-11-27 17:17:36,624 - [user_api.py:14] - INFO - 【发送注册请求】 URL: http://127.0.0.1:8080/api/user/register, 参数: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,password123
+2026-11-27 17:17:36,628 - [test_user.py:129] - INFO - === 开始测试注册接口，测试数据: 短用户名 ===
+2026-11-27 17:17:36,631 - [user_api.py:14] - INFO - 【发送注册请求】 URL: http://127.0.0.1:8080/api/user/register, 参数: ab,password123
+2026-11-27 17:17:36,632 - [db_util.py:52] - INFO - 数据库连接已关闭！

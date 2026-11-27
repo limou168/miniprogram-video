@@ -24,6 +24,7 @@ class TestBusinessFlow:
             if_check=favorite_api.if_check(id)
             assert if_check["code"]==200
             assert if_check["message"] =="success"
+            assert if_check["data"] is True
 
         with allure.step("步骤4：查询收藏列表，验证刚才的视频在里面"):
             res_list=favorite_api.get_list()
@@ -39,7 +40,7 @@ class TestBusinessFlow:
             
         with allure.step("步骤5：再次查询收藏列表，验证视频已被移除"):
             res_list_after = favorite_api.get_list()
-            favorite_video_ids_after = [(item["videoId"]) for item in res_list["data"]]
+            favorite_video_ids_after = [(item["videoId"]) for item in res_list_after["data"]]
             assert id not in favorite_video_ids_after, " 取消收藏后，视频依然在列表中！"
             
         logger.info("收藏全流程测试通过")
